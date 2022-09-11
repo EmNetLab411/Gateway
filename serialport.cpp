@@ -11,12 +11,15 @@ serialport::serialport(QObject *parent) : QObject(parent)
     connect(timer, &QTimer::timeout, this, &serialport::readData);
     connect(port, &QextSerialPort::readyRead, this, &serialport::readData);
 
-    timer->start(1000);
+    buffer = new QByteArray();
+
+    timer->start(3000);
 
 }
 
 serialport::~serialport()
 {
+    delete buffer;
     delete timer;
     delete port;
 }
@@ -54,52 +57,55 @@ void serialport::readData()
     if(port->bytesAvailable())
     {
         QByteArray receivedByteData = port->readAll();
+        qDebug() <<  "received size: " <<receivedByteData.size();
         if(!receivedByteData.isEmpty())
         {
-            int endPosition = receivedByteData.lastIndexOf("\n");
-            QByteArray byteData = receivedByteData.mid(0, endPosition);
-            QString byteDataString(byteData);
-            QList<QString> stringDataList = byteDataString.split("\n");
-            foreach(QString data, stringDataList)
+            buffer->append(receivedByteData);
+            qDebug() <<  "buffer size: " << buffer->size();
+            int endMessagePosition = buffer->indexOf(":", 0);
+            qDebug() << "endPosition: " << endMessagePosition;
+
+            if(!buffer->isEmpty())
             {
-               QByteArray byteMessage(data.toUtf8());
-               uavlink_message_t* message = new uavlink_message_t();
-               message->Decode(byteMessage);
+                QByteArray messageByteArray = buffer->mid(0, endMessagePosition + 1);
+                qDebug() << "Size message:" << messageByteArray.size();
+                buffer->remove(0, endMessagePosition + 1);
+                uavlink_message_t* message = new uavlink_message_t();
+                message->Decode(messageByteArray);
 
-               qDebug() << "msgID: " << message->getMessageID();
-               qDebug() << "lenPayload: " << message->getLenPlayLoad();
-               qDebug() << "MessageSize" << byteMessage.size();
+                qDebug() << "msgID: " << message->getMessageID();
+                qDebug() << "lenPayload: " << message->getLenPlayLoad();
+                qDebug() << "MessageSize" << messageByteArray.size();
 
-               switch (message->getMessageID())
-               {
+                switch (message->getMessageID())
+                {
                 case UAVLINK_MSG_ID_SENSOR:
                 {
-                   uavlink_msg_sensor_t* messageSensor = new uavlink_msg_sensor_t();
-                   messageSensor->Decode(message->getPayLoad());
-                   emit signalReceivedData( messageSensor->getSensorID(),
-                                            messageSensor->getLat(),
-                                            messageSensor->getLon(),
-                                            messageSensor->getTemp(),
-                                            messageSensor->getHum(),
-                                            messageSensor->getDust());
-                   qDebug() << "Sensor ID: " << messageSensor->getSensorID();
-//                   qDebug() << "lat: " << messageSensor->getLat();
-//                   qDebug() << "lon: " << messageSensor->getLon();
-                   qDebug() << "temp: " << messageSensor->getTemp();
-                   qDebug() << "hum: " << messageSensor->getHum();
-                   qDebug() << "dust: " << messageSensor->getDust();
+                    uavlink_msg_sensor_t* messageSensor = new uavlink_msg_sensor_t();
+                    messageSensor->Decode(message->getPayLoad());
+                    emit signalReceivedData( messageSensor->getSensorID(),
+                                             messageSensor->getLat(),
+                                             messageSensor->getLon(),
+                                             messageSensor->getTemp(),
+                                             messageSensor->getHum(),
+                                             messageSensor->getDust());
 
-                   delete messageSensor;
-                   break;
+                    qDebug() << messageSensor->getLat();
+                    qDebug() << messageSensor->getLon();
+
+                    delete messageSensor;
+                    break;
                 }
                 case UAVLINK_MSG_ID_GLOBAL_POSITION:
-                   break;
+                    break;
                 default:
-                   break;
-               }
-               delete message;
+                    break;
+                }
+                delete message;
             }
-        }        
+        }
+
+
     }
 }
 

@@ -12,42 +12,43 @@ int uavlink_msg_sensor_t::getSensorID()
 
 float uavlink_msg_sensor_t::getTemp()
 {
-    return _temp;
+    return _temp / 100.0f;
 }
 
 float uavlink_msg_sensor_t::getHum()
 {
-    return _hum;
+    return _hum / 100.0f;
 }
 
 float uavlink_msg_sensor_t::getDust()
 {
-    return _dust;
+    return _dust / 100.0f;
 }
 
 double uavlink_msg_sensor_t::getLat()
 {
-    return _lat;
+    return ((double) _lat) / 10000000.0f;
 }
 
 double uavlink_msg_sensor_t::getLon()
 {
-    return _lon;
+    return ((double) _lon) / 10000000.0f;
 }
 
 
 void uavlink_msg_sensor_t::Decode(QByteArray data)
 {
-    _id = data[0];
-    _temp = data[1];
-    _hum = data[2];
-    _dust = data[3];
+    QDataStream test(data);
+    test.setByteOrder(QDataStream::LittleEndian);
 
-    qDebug() << data.size();
-//    _lat = ((double)data[2, 5]) / 10000000.0f;
-//    _lon = ((double)data[6, 9]) / 10000000.0f;
-//    _temp = ((float)data[10, 11]) / 100.0f;
-//    _hum = ((float)data[12, 13]) / 100.0f;
-//    _dust = ((float)data[14, 15]) / 100.0f;
+    test >> _id;
+    test >> _lat;
+    test >> _lon;
+    test >> _temp;
+    test >> _hum;
+    test >> _dust;
+
 
 }
+
+

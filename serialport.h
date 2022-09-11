@@ -27,7 +27,7 @@ public:
 
 signals:
     void signalOpenSerialPort(QThread::Priority);
-    void signalReceivedData(int idSensor, double lat, double lon, float temp, float hum, float dust);
+    void signalReceivedData(int idSensor, float lat, float lon, float temp, float hum, float dust);
 
 public slots:
     void readData();
@@ -40,7 +40,7 @@ public:
     settingsfile configFile;
 
 private:
-
+    QByteArray* buffer;
 
 };
 

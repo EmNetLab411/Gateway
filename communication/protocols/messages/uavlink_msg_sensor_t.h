@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QDebug>
+#include <iostream>
+#include <QDataStream>
 
 class uavlink_msg_sensor_t : public QObject
 {
@@ -21,12 +23,12 @@ public:
 signals:
 
 private:
-    double _lat;
-    double _lon;
-    int _id;
-    float _temp;
-    float _hum;
-    float _dust;
+    qint32 _lat;
+    qint32 _lon;
+    qint16 _id;
+    qint16 _temp;
+    qint16 _hum;
+    qint16 _dust;
 
 };
 

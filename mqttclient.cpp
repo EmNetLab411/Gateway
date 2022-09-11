@@ -76,7 +76,9 @@ void mqttclient::publishDataSensor(int sensorID, double lat, double lon, float t
 {
     QString message = "{\"Temperature\":\""+ QString::number(temp) +
             "\" , \"Humidity\":\""+ QString::number(hum) +
-            "\", \"Dust Density\":\""+ QString::number(dust) + "\"}";
+            "\", \"Dust Density\":\""+ QString::number(dust) +
+            "\" , \"Latitude\":\""+ QString::number(lat, 'f', 8) +
+            "\" , \"Longitude\":\""+ QString::number(hum, 'f', 8) + "\"}";
     QByteArray publicMessage = message.toUtf8();
     m_client->publish(_topic, publicMessage);
 }

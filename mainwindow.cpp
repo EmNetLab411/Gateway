@@ -102,6 +102,10 @@ void MainWindow::onPrintSensorData(int idSensor, double lat, double lon, float t
 {
 
     QString tmp = "\n[" + QTime::currentTime().toString() + "]" + " Collect data from sensor: "+ QString::number(idSensor) +"\r\n";
+    tmp += "Latitude: ";
+    tmp += QString::number(lat, 'f', 10);
+    tmp += "    ||    Longitude: ";
+    tmp += QString::number(lon, 'f', 10);
     tmp += "\nTemperature: ";
     tmp += QString::number(temp);
     tmp += " oC    ||    Humidity: ";
@@ -109,6 +113,8 @@ void MainWindow::onPrintSensorData(int idSensor, double lat, double lon, float t
     tmp += " %    ||    Dust: ";
     tmp += QString::number(dust);
     tmp += " %\n";
+
+
 
     console->printData(tmp);
 
