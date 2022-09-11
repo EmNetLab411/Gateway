@@ -404,6 +404,16 @@
            </widget>
           </item>
           <item>
+           <widget class="QLabel" name="labelConnected">
+            <property name="text">
+             <string>Conntected Status: Disconnected</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -415,6 +425,13 @@
              </size>
             </property>
            </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="text">
+             <string>Connect to Thingsboard</string>
+            </property>
+           </widget>
           </item>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -437,7 +454,7 @@
               <item>
                <widget class="QPushButton" name="continuneButton">
                 <property name="text">
-                 <string>Exit</string>
+                 <string>Disconnect</string>
                 </property>
                </widget>
               </item>
