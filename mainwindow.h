@@ -48,6 +48,14 @@ private slots:
     void on_stopButton_clicked();
     void onMqttConntected();
     void onMqttConnecting();
+    void onMqttDisconnect();
+    void checkSerialPort();
+
+    void on_disconnectMqttButton_clicked();
+
+    void on_connectMqttButton_clicked();
+
+    void on_clearButton_clicked();
 
 public:
     settingsfile* config;

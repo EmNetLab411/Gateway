@@ -26,6 +26,7 @@ enum DataType
     GPS_BAUDRATE,
     LORA_PORT,
     LORA_BAUDRATE,
+    SERIAL_READ_SPEED,
     CONF_THRESOL_FILE_PATH,
     IMAGES_FILE_PATH,
     DATA_FILE_PATH,
@@ -35,8 +36,11 @@ enum DataType
     TIME_DETECT_FILE_PATH,
     HOST_MQTT,
     PORT_MQTT,
-    TOPIC1,
-    TOPIC2,
+    TOPIC_DEVICE_TELEMETRY,
+    TOPIC_GATEWAY_CONNECT,
+    TOPIC_GATEWAY_DISCONNECT,
+    TOPIC_GATEWAY_ATTRIBUTES,
+    TOPIC_GATEWAY_TELEMETRY,
     ACCESS_TOKEN
 
 
@@ -63,12 +67,16 @@ public:
     int LORA_BAUDRATE_DEFAULT;
     QString GPS_PORT_DEFAULT;
     int GPS_BAUDRATE_DEFAULT;
+    int SERIAL_READ_SPEED_T;
     QString CONF_THRESOL;
 
     QString hostMqtt;
     int portMqtt;
-    QString topic1;
-    QString topic2;
+    QString topic_device_telemetry;
+    QString topic_gateway_connect;
+    QString topic_gateway_disconnect;
+    QString topic_gateway_attribute;
+    QString topic_gateway_telemetry;
     QString ACCESS_TOKEN_H;
 
     std::map<QString, DataType> s_mapStringValues;

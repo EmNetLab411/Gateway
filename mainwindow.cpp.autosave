@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mqttClient->m_client, &QMqttClient::connected, this, &MainWindow::onMqttConntected);
     connect(mqttClient->m_client, &QMqttClient::disconnected, this, &MainWindow::onMqttDisconnect);
     connect(mqttClient->m_client, &QMqttClient::connected, mqttClient, &mqttclient::connectToGateway);
-    //connect(lora, &serialport::signalReceivedData, mqttClient, &mqttclient::publishDataSensor);
+    //connect(lora, &serconfig->updateConfigSettings();ialport::signalReceivedData, mqttClient, &mqttclient::publishDataSensor);
     connect(lora, &serialport::signalReceivedData, mqttClient, &mqttclient::publishDataSensorAsGateway);
 
 

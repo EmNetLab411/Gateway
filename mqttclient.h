@@ -18,6 +18,8 @@ public:
 
     void connectToHost();
     void disconnectToHost();
+    void disconnectToGateway();
+    void publishTypeSensor(int sensorID, QString type, QVariant data, uint timestame, int numberPrefix);
 
 
 signals:
@@ -26,10 +28,12 @@ public slots:
     void setClientPort(int p);
     void Publish(QString message);
     void publishDataSensor(int sensorID, double lat, double lon, float temp, float hum, float dust);
+    void publishDataSensorAsGateway(int sensorID, double lat, double lon, float temp, float hum, float dust);
     void Subscribe();
     void updateLogStateChange();
     void brokerDisconnected();
     void testMqtt();
+    void connectToGateway();
 
 public:
     QMqttClient* m_client;

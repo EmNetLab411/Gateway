@@ -414,6 +414,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QLabel" name="labelSerialPort">
+            <property name="text">
+             <string>Serial Port: Closed</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -427,7 +434,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="connectMqttButton">
             <property name="text">
              <string>Connect to Thingsboard</string>
             </property>
@@ -445,14 +452,14 @@
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout">
               <item>
-               <widget class="QPushButton" name="stopButton">
+               <widget class="QPushButton" name="printLogButton">
                 <property name="text">
                  <string>Print log file</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="continuneButton">
+               <widget class="QPushButton" name="disconnectMqttButton">
                 <property name="text">
                  <string>Disconnect</string>
                 </property>

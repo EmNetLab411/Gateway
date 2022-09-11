@@ -13,7 +13,7 @@ serialport::serialport(QObject *parent) : QObject(parent)
 
     buffer = new QByteArray();
 
-    timer->start(3000);
+    timer->start(configFile.SERIAL_READ_SPEED_T);
 
 }
 
@@ -42,10 +42,7 @@ void serialport::openSerialPort()
         timer->stop();
     }
 
-    qInfo() << "Serial Port Open:" << port->isOpen();
-
 }
-
 
 void serialport::writeData(QByteArray sendData)
 {
@@ -57,18 +54,15 @@ void serialport::readData()
     if(port->bytesAvailable())
     {
         QByteArray receivedByteData = port->readAll();
-        qDebug() <<  "received size: " <<receivedByteData.size();
         if(!receivedByteData.isEmpty())
         {
             buffer->append(receivedByteData);
             qDebug() <<  "buffer size: " << buffer->size();
             int endMessagePosition = buffer->indexOf(":", 0);
-            qDebug() << "endPosition: " << endMessagePosition;
 
             if(!buffer->isEmpty())
             {
                 QByteArray messageByteArray = buffer->mid(0, endMessagePosition + 1);
-                qDebug() << "Size message:" << messageByteArray.size();
                 buffer->remove(0, endMessagePosition + 1);
                 uavlink_message_t* message = new uavlink_message_t();
                 message->Decode(messageByteArray);

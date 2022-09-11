@@ -16,8 +16,6 @@ settingsfile::settingsfile()
         }
     }
 
-    qInfo() << LOG_FILE;
-
     confFile.close();
 }
 
@@ -44,6 +42,9 @@ void settingsfile::readFile(QString dataType, QString data)
             break;
         case LORA_BAUDRATE:
             this->LORA_BAUDRATE_DEFAULT = data.toInt();
+            break;
+        case SERIAL_READ_SPEED:
+            this->SERIAL_READ_SPEED_T = data.toInt();
             break;
         case CONF_THRESOL_FILE_PATH:
             this->CONF_THRESOL = data;
@@ -72,11 +73,20 @@ void settingsfile::readFile(QString dataType, QString data)
         case PORT_MQTT:
             this->portMqtt = data.toInt();
             break;
-        case TOPIC1:
-            this->topic1 = data;
+        case TOPIC_DEVICE_TELEMETRY:
+            this->topic_device_telemetry = data;
             break;
-        case TOPIC2:
-            this->topic2 = data;
+        case TOPIC_GATEWAY_CONNECT:
+            this->topic_gateway_connect = data;
+            break;
+        case TOPIC_GATEWAY_DISCONNECT:
+            this->topic_gateway_disconnect = data;
+            break;
+        case TOPIC_GATEWAY_ATTRIBUTES:
+            this->topic_gateway_attribute = data;
+            break;
+        case TOPIC_GATEWAY_TELEMETRY:
+            this->topic_gateway_telemetry = data;
             break;
         case ACCESS_TOKEN:
             this->ACCESS_TOKEN_H = data;
@@ -84,7 +94,6 @@ void settingsfile::readFile(QString dataType, QString data)
         default:
             // Do nothing
             break;
-
     }
 }
 
@@ -96,6 +105,7 @@ void settingsfile::Initialize()
     s_mapStringValues["GPS_BAUDRATE"] = GPS_BAUDRATE;
     s_mapStringValues["LORA_PORT"] = LORA_PORT;
     s_mapStringValues["LORA_BAUDRATE"] = LORA_BAUDRATE;
+    s_mapStringValues["SERIAL_READ_SPEED"] = SERIAL_READ_SPEED;
     s_mapStringValues["CONF_THRESOL_FILE_PATH"] = CONF_THRESOL_FILE_PATH;
     s_mapStringValues["IMAGES_FILE_PATH"] = IMAGES_FILE_PATH;
     s_mapStringValues["DATA_FILE_PATH"] = DATA_FILE_PATH;
@@ -105,8 +115,11 @@ void settingsfile::Initialize()
     s_mapStringValues["TIME_DETECT_FILE_PATH"] = TIME_DETECT_FILE_PATH;
     s_mapStringValues["HOST_MQTT"] = HOST_MQTT;
     s_mapStringValues["PORT_MQTT"] = PORT_MQTT;
-    s_mapStringValues["TOPIC1"] = TOPIC1;
-    s_mapStringValues["TOPIC2"] = TOPIC2;
+    s_mapStringValues["TOPIC_DEVICE_TELEMETRY"] = TOPIC_DEVICE_TELEMETRY;
+    s_mapStringValues["TOPIC_GATEWAY_CONNECT"] = TOPIC_GATEWAY_CONNECT;
+    s_mapStringValues["TOPIC_GATEWAY_DISCONNECT"] = TOPIC_GATEWAY_DISCONNECT;
+    s_mapStringValues["TOPIC_GATEWAY_ATTRIBUTES"] = TOPIC_GATEWAY_ATTRIBUTES;
+    s_mapStringValues["TOPIC_GATEWAY_TELEMETRY"] = TOPIC_GATEWAY_TELEMETRY;
     s_mapStringValues["ACCESS_TOKEN"] = ACCESS_TOKEN;
 }
 
