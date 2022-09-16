@@ -42,6 +42,11 @@ void mqttclient::connectToGateway()
     m_client->publish(_topic, publicMessage);
 }
 
+void mqttclient::onSubMessage(const QMqttMessage &msg)
+{
+    qDebug() << msg.payload();
+}
+
 void mqttclient::disconnectToGateway()
 {
     _topic = config->topic_gateway_disconnect;
@@ -108,6 +113,11 @@ void mqttclient::publishDataSensorAsGateway(int sensorID, double lat, double lon
     publishTypeSensor(sensorID, "Humidity", hum, timestame, 2);
     publishTypeSensor(sensorID, "Dust Density", dust, timestame, 2);
 
+    publishAttributesTypeSensor(sensorID, "Latitude", lat, 7);
+    publishAttributesTypeSensor(sensorID, "Longitude", lon, 7);
+    publishAttributesTypeSensor(sensorID, "Temperture", temp, 2);
+    publishAttributesTypeSensor(sensorID, "Humidity", hum, 2);
+    publishAttributesTypeSensor(sensorID, "Dust Density", dust, 2);
 }
 
 void mqttclient::publishTypeSensor(int sensorID, QString type, QVariant data, uint timestame, int numberPrefix)
@@ -125,11 +135,40 @@ void mqttclient::publishTypeSensor(int sensorID, QString type, QVariant data, ui
     m_client->publish(_topic, gatewayTele);
 }
 
+void mqttclient::publishAttributesTypeSensor(int sensorID, QString type, QVariant data, int numberPrefix)
+{
+    QString payload = "{\"Sensor " + QString::number(sensorID) + "\":{\"";
+    payload += type + "\":";
+    payload += QString::number(data.toFloat(), 'f', numberPrefix);
+    payload += "}}";
+    QByteArray gatewayAttrib(payload.toUtf8());
+    _topic = config->topic_gateway_attribute;
+    m_client->publish(_topic, gatewayAttrib);
+}
+
+void mqttclient::publishAttributesResponse(int requestId, QString device, QString value)
+{
+    QString payload = "{\"id\":" + QString::number(requestId) + ",";
+    payload += "\"device\":\"" + device + "\",";
+    payload += "\"client\": true,";
+    payload += "\"key\":\"" + value + "\"}";
+    QByteArray subAttrib(payload.toUtf8());
+    _topic = config->topic_gateway_attribute_request;
+    m_client->publish(_topic, subAttrib);
+
+}
+
+
 void mqttclient::Subscribe()
 {
-    auto subscroption = m_client->subscribe(_topic);
-    if(!subscroption)
+    _topic = config->topic_gateway_attribute_response;
+    auto subcribtion = m_client->subscribe(_topic);
+    if(!subcribtion)
     {
-
+        emit signalSubcribe(false);
+    } else
+    {
+        sub = new mqttsubscription(subcribtion, this);
+        emit signalSubcribe(true);
     }
 }

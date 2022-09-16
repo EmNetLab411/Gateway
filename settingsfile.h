@@ -40,6 +40,8 @@ enum DataType
     TOPIC_GATEWAY_CONNECT,
     TOPIC_GATEWAY_DISCONNECT,
     TOPIC_GATEWAY_ATTRIBUTES,
+    TOPIC_GATEWAY_ATTRIBUTES_REQUEST,
+    TOPIC_GATEWAY_ATTRUBUTES_RESPONSE,
     TOPIC_GATEWAY_TELEMETRY,
     ACCESS_TOKEN
 
@@ -76,6 +78,8 @@ public:
     QString topic_gateway_connect;
     QString topic_gateway_disconnect;
     QString topic_gateway_attribute;
+    QString topic_gateway_attribute_request;
+    QString topic_gateway_attribute_response;
     QString topic_gateway_telemetry;
     QString ACCESS_TOKEN_H;
 

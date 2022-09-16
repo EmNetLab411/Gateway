@@ -45,17 +45,22 @@ signals:
 private slots:
     void onPrintSensorData(int idSensor, double lat, double lon, float temp, float hum, float dust);
     void on_pushButton_clicked();
-    void on_stopButton_clicked();
     void onMqttConntected();
     void onMqttConnecting();
     void onMqttDisconnect();
+    void onSubcribeTopic(bool result);
     void checkSerialPort();
+    void onMqttSubUpdateState(QString state);
+    void onMqttSubMessage(QString message);
+    void onMqttSubQos(quint8 qos);
 
     void on_disconnectMqttButton_clicked();
 
     void on_connectMqttButton_clicked();
 
     void on_clearButton_clicked();
+
+    void on_subButton_clicked();
 
 public:
     settingsfile* config;
@@ -64,8 +69,9 @@ private:
     Console* console;
     QThread* thread_lora;
     QString _organizationName, _appname;
-    bool transceiverStarted, sended, detectedFlag, loraStarted;
+    bool transceiverStarted, sended, detectedFlag, loraStarted, subcribeSuccess = false;
     serialport* lora;
     mqttclient* mqttClient;
+    QString attributes;
 };
 #endif // MAINWINDOW_H

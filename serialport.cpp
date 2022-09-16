@@ -84,9 +84,6 @@ void serialport::readData()
                                              messageSensor->getHum(),
                                              messageSensor->getDust());
 
-                    qDebug() << messageSensor->getLat();
-                    qDebug() << messageSensor->getLon();
-
                     delete messageSensor;
                     break;
                 }

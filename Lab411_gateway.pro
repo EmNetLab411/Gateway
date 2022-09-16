@@ -12,10 +12,10 @@ SOURCES += \
     communication/protocols/messages/uavlink_msg_sensor_t.cpp \
     communication/protocols/uavlink_message_t.cpp \
     console.cpp \
-    lora.cpp \
     main.cpp \
     mainwindow.cpp \
     mqttclient.cpp \
+    mqttsubscription.cpp \
     serialport.cpp \
     settingsfile.cpp
 
@@ -25,10 +25,10 @@ HEADERS += \
     communication/protocols/messages/uavlink_msg_sensor_t.h \
     communication/protocols/uavlink_message_t.h \
     console.h \
-    lora.h \
     mainwindow.h \
     messageID.h \
     mqttclient.h \
+    mqttsubscription.h \
     serialport.h \
     settingsfile.h
 

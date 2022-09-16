@@ -1,0 +1,36 @@
+=========================:Serial Port Config:=========================
+
+TRANSCEIVER_PORT:ttyUSB0
+TRANSCEIVER_BAURATE:9600
+
+GPS_PORT:ttyUSB0
+GPS_BAUDRATE:9600
+
+LORA_PORT:ttyUSB0
+LORA_BAUDRATE:9600
+
+SERIAL_READ_SPEED:1000
+
+=========================:Data File Path:=========================
+
+CONF_THRESOL_FILE_PATH:./WSAN/thresol.txt	
+IMAGES_FILE_PATH:./WSAN/Images/Sensor
+DATA_FILE_PATH:./WSAN/dataHN.txt
+GPS_FILE_PATH:./WSAN/gps.txt
+HISTORY_FILE_PATH:./WSAN/history.txt
+LOG_FILE_PATH:./WSAN/log.txt
+TIME_DETECT_FILE_PATH:./WSAN/timeDetect.txt
+
+=========================:MQTT Config:=========================
+
+HOST_MQTT:demo.thingsboard.io
+PORT_MQTT:1883
+TOPIC_DEVICE_TELEMETRY:v1/devices/me/telemetry
+TOPIC_GATEWAY_CONNECT:v1/gateway/connect
+TOPIC_GATEWAY_DISCONNECT:v1/gateway/disconnect
+TOPIC_GATEWAY_ATTRIBUTES:v1/gateway/attributes
+TOPIC_GATEWAY_ATTRIBUTES_REQUEST:v1/gateway/attributes/request
+TOPIC_GATEWAY_ATTRUBUTES_RESPONSE:v1/gateway/attributes/response
+TOPIC_GATEWAY_TELEMETRY:v1/gateway/telemetry
+ACCESS_TOKEN:TaVkcwYMDqS67EAsQI4j
+

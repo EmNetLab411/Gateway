@@ -18,6 +18,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->labelConnected->setStyleSheet("QLabel { background-color : red; color : black; qproperty-alignment: AlignCenter; font: bold; border-color: rgb(255,255,255); border-width: 2px; border-style: solid; border-radius: 9px; padding: 5px;}");
     ui->labelConnected->setText("MQTT Status: Disconnected");
     ui->labelSerialPort->setStyleSheet("QLabel { background-color : red; color : black; qproperty-alignment: AlignCenter; font: bold; border-color: rgb(255,255,255); border-width: 2px; border-style: solid; border-radius: 9px; padding: 5px;}");
+    ui->label_sub_state->setStyleSheet("QLabel { background-color : white; color : black; qproperty-alignment: AlignCenter; font: nomal; border-color: rgb(255,255,255); padding: 5px;}");
+    ui->label_qos_num->setStyleSheet("QLabel { background-color : white; color : black; qproperty-alignment: AlignCenter; font: nomal; border-color: rgb(255,255,255); padding: 5px;}");
+    ui->label_qos->setStyleSheet("QLabel { background-color : white; color : black; qproperty-alignment: AlignCenter; font: nomal; border-color: rgb(255,255,255); padding: 5px;}");
+    ui->labe_state->setStyleSheet("QLabel { background-color : white; color : black; qproperty-alignment: AlignCenter; font: nomal; border-color: rgb(255,255,255); padding: 5px;}");
+    ui->label_qos_num->setText("0");
+    ui->label_sub_state->setText("Unsubscribed");
 
     config = new settingsfile();
 
@@ -41,10 +47,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mqttClient->m_client, &QMqttClient::connected, this, &MainWindow::onMqttConntected);
     connect(mqttClient->m_client, &QMqttClient::disconnected, this, &MainWindow::onMqttDisconnect);
     connect(mqttClient->m_client, &QMqttClient::connected, mqttClient, &mqttclient::connectToGateway);
-    //connect(lora, &serialport::signalReceivedData, mqttClient, &mqttclient::publishDataSensor);
+    //connect(lora, &serconfig->updateConfigSettings();ialport::signalReceivedData, mqttClient, &mqttclient::publishDataSensor);
     connect(lora, &serialport::signalReceivedData, mqttClient, &mqttclient::publishDataSensorAsGateway);
-
-
+    connect(mqttClient, &mqttclient::signalSubcribe, this, &MainWindow::onSubcribeTopic);
 }
 
 MainWindow::~MainWindow()
@@ -132,11 +137,6 @@ void MainWindow::on_pushButton_clicked()
     this->close();
 }
 
-void MainWindow::on_stopButton_clicked()
-{
-    mqttClient->testMqtt();
-}
-
 void MainWindow::onMqttConntected()
 {
     ui->labelConnected->setStyleSheet("QLabel { background-color : green; "
@@ -149,6 +149,10 @@ void MainWindow::onMqttConntected()
                                       "border-radius: 9px; "
                                       "padding: 5px;}");
     ui->labelConnected->setText("MQTT Status: Connected");
+
+    console->printData("Connect to Thingsboard MQTT Broker successed!!!");
+
+    mqttClient->Subscribe();
 }
 
 void MainWindow::onMqttConnecting()
@@ -177,6 +181,24 @@ void MainWindow::onMqttDisconnect()
                                       "border-radius: 9px; "
                                       "padding: 5px;}");
     ui->labelConnected->setText("MQTT Status: Disconnected!!!");
+}
+
+void MainWindow::onSubcribeTopic(bool result)
+{
+    if(!result)
+    {
+        console->printData("Error, Could not subscribe. Is there a valid connection?");
+        mqttClient->Subscribe();
+    }
+    else
+    {
+        console->printData("Subcribe to topic Attributes success!");
+        subcribeSuccess = true;
+        connect(mqttClient->sub, &mqttsubscription::signalUpdateSubMessage, this, &MainWindow::onMqttSubMessage);
+        connect(mqttClient->sub, &mqttsubscription::signalUpdateSubState, this, &MainWindow::onMqttSubUpdateState);
+        connect(mqttClient->sub, &mqttsubscription::signalUpdateSubQos, this, &MainWindow::onMqttSubQos);
+
+    }
 }
 
 void MainWindow::checkSerialPort()
@@ -212,6 +234,39 @@ void MainWindow::checkSerialPort()
     }
 }
 
+void MainWindow::onMqttSubUpdateState(QString state)
+{
+    ui->label_sub_state->setText(state);
+}
+
+void MainWindow::onMqttSubMessage(QString message)
+{
+
+    QVector<QString> type;
+    QVector<QVariant> data;
+    message.remove(QChar('"'), Qt::CaseInsensitive);
+    message.remove(QChar('}'), Qt::CaseInsensitive);
+    message.remove(QChar('{'), Qt::CaseInsensitive);
+    console->printData(message);
+    QStringList msg = message.split(",");
+    foreach(QString typeValue, msg)
+    {
+        QStringList splitData = typeValue.split(":");
+        type.append(splitData[0]);
+        data.append(splitData[1]);
+    }
+
+    QString _message = "ID: " + data.value(0).toString() + " - Device: " + data.value(1).toString() + " - " + attributes +": " + data.value(2).toString();
+    console->printData(_message);
+
+
+}
+
+void MainWindow::onMqttSubQos(quint8 qos)
+{
+    ui->label_qos_num->setText(QString::number(qos));
+}
+
 
 void MainWindow::on_disconnectMqttButton_clicked()
 {
@@ -234,5 +289,12 @@ void MainWindow::on_connectMqttButton_clicked()
 void MainWindow::on_clearButton_clicked()
 {
     console->clear();
+}
+
+
+void MainWindow::on_subButton_clicked()
+{
+    mqttClient->publishAttributesResponse(1, "Sensor 1", "Latitude");
+    attributes = "Latitude";
 }
 

@@ -5,9 +5,11 @@
 #include <QDateTime>
 #include <QtMqtt/QtMqtt>
 #include <QtMqtt/QMqttClient>
+#include <QtMqtt/QMqttSubscription>
 #include <QJsonObject>
 
 #include "settingsfile.h"
+#include "mqttsubscription.h"
 
 class mqttclient : public QObject
 {
@@ -20,9 +22,11 @@ public:
     void disconnectToHost();
     void disconnectToGateway();
     void publishTypeSensor(int sensorID, QString type, QVariant data, uint timestame, int numberPrefix);
-
+    void publishAttributesTypeSensor(int sensorID, QString type, QVariant data, int numberPrefix);
+    void publishAttributesResponse(int requestId, QString device, QString value);
 
 signals:
+    void signalSubcribe(bool result);
 
 public slots:
     void setClientPort(int p);
@@ -34,9 +38,13 @@ public slots:
     void brokerDisconnected();
     void testMqtt();
     void connectToGateway();
+    void onSubMessage(const QMqttMessage &msg);
 
 public:
     QMqttClient* m_client;
+    QMqttSubscription* m_sub;
+    mqttsubscription* sub;
+
 
 private:
     settingsfile* config;

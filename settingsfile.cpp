@@ -85,6 +85,12 @@ void settingsfile::readFile(QString dataType, QString data)
         case TOPIC_GATEWAY_ATTRIBUTES:
             this->topic_gateway_attribute = data;
             break;
+        case TOPIC_GATEWAY_ATTRUBUTES_RESPONSE:
+            this->topic_gateway_attribute_response = data;
+            break;
+        case TOPIC_GATEWAY_ATTRIBUTES_REQUEST:
+            this->topic_gateway_attribute_request = data;
+            break;
         case TOPIC_GATEWAY_TELEMETRY:
             this->topic_gateway_telemetry = data;
             break;
@@ -119,6 +125,8 @@ void settingsfile::Initialize()
     s_mapStringValues["TOPIC_GATEWAY_CONNECT"] = TOPIC_GATEWAY_CONNECT;
     s_mapStringValues["TOPIC_GATEWAY_DISCONNECT"] = TOPIC_GATEWAY_DISCONNECT;
     s_mapStringValues["TOPIC_GATEWAY_ATTRIBUTES"] = TOPIC_GATEWAY_ATTRIBUTES;
+    s_mapStringValues["TOPIC_GATEWAY_ATTRIBUTES_REQUEST"] = TOPIC_GATEWAY_ATTRIBUTES_REQUEST;
+    s_mapStringValues["TOPIC_GATEWAY_ATTRUBUTES_RESPONSE"] = TOPIC_GATEWAY_ATTRUBUTES_RESPONSE;
     s_mapStringValues["TOPIC_GATEWAY_TELEMETRY"] = TOPIC_GATEWAY_TELEMETRY;
     s_mapStringValues["ACCESS_TOKEN"] = ACCESS_TOKEN;
 }
