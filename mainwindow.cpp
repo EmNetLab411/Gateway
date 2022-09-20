@@ -1,5 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <VLCQtCore/Common.h>
+#include <VLCQtCore/Instance.h>
+#include <VLCQtCore/Media.h>
+#include <VLCQtCore/MediaPlayer.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -35,6 +39,31 @@ MainWindow::MainWindow(QWidget *parent)
     thread_lora = new QThread();
     lora->moveToThread(thread_lora);
 
+    // video vlc
+    _instance = new VlcInstance(VlcCommon::args(), this);
+    _player_forward = new VlcMediaPlayer(_instance);
+    _player_below = new VlcMediaPlayer(_instance);
+    _player_forward->setVideoWidget(ui->video_forward);
+    _player_below->setVideoWidget(ui->video_below);
+    ui->video_forward->setMediaPlayer(_player_forward);
+    ui->video_below->setMediaPlayer(_player_below);
+    // rescale to 1:1
+    Vlc::Ratio r = Vlc::Ratio::R_1_1;
+    ui->video_forward->setDefaultAspectRatio(r);
+    ui->video_forward->setAspectRatio(r);
+    ui->video_forward->setCurrentCropRatio(r);
+    ui->video_forward->setDefaultCropRatio(r);
+    ui->video_forward->setCropRatio(r);
+    ui->video_forward->enableDefaultSettings();
+    ui->video_below->setDefaultAspectRatio(r);
+    ui->video_below->setAspectRatio(r);
+    ui->video_below->setCurrentCropRatio(r);
+    ui->video_below->setDefaultCropRatio(r);
+    ui->video_below->setCropRatio(r);
+    ui->video_below->enableDefaultSettings();
+
+
+    //connect
     connect(lora, &serialport::signalOpenSerialPort, thread_lora, &QThread::start);
     connect(thread_lora, &QThread::started, lora, &serialport::openSerialPort);
     connect(lora, &serialport::signalReceivedData, this, &MainWindow::onPrintSensorData);
@@ -296,5 +325,36 @@ void MainWindow::on_subButton_clicked()
 {
     mqttClient->publishAttributesResponse(1, "Sensor 1", "Latitude");
     attributes = "Latitude";
+}
+
+void MainWindow::on_get_video_forward_clicked()
+{
+    _media_forward = new VlcMedia("http://192.168.1.10:9000/", _instance);
+    //reduce latency
+    QStringList option_list;
+           option_list.append(":network-caching=10");
+           option_list.append(":clock-jitter=0");
+           option_list.append(":clock-synchro=0");
+
+    _media_forward->setOptions(option_list);
+    _player_forward->open(_media_forward);
+
+
+}
+
+
+void MainWindow::on_get_video_below_clicked()
+{
+    _media_below = new VlcMedia("http://192.168.1.10:8080/stream?topic=/main_camera/image_raw", _instance);
+    //reduce latency
+    QStringList option_list;
+           option_list.append(":network-caching=100");
+           option_list.append(":clock-jitter=0");
+           option_list.append(":clock-synchro=0");
+
+    _media_below->setOptions(option_list);
+    _player_below->open(_media_below);
+
+
 }
 

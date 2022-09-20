@@ -13,6 +13,10 @@
 #include "console.h"
 #include "serialport.h"
 #include "mqttclient.h"
+#include <VLCQtCore/Common.h>
+#include <VLCQtCore/Instance.h>
+#include <VLCQtCore/Media.h>
+#include <VLCQtCore/MediaPlayer.h>
 
 #include <QJsonDocument>
 #include <QJsonParseError>
@@ -62,6 +66,10 @@ private slots:
 
     void on_subButton_clicked();
 
+    void on_get_video_forward_clicked();
+
+    void on_get_video_below_clicked();
+
 public:
     settingsfile* config;
 private:
@@ -73,5 +81,9 @@ private:
     serialport* lora;
     mqttclient* mqttClient;
     QString attributes;
+    //vlc video
+    VlcInstance *_instance;
+    VlcMedia *_media_forward, *_media_below;
+    VlcMediaPlayer *_player_forward, *_player_below;
 };
 #endif // MAINWINDOW_H
