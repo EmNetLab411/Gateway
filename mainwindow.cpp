@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->labe_state->setStyleSheet("QLabel { background-color : white; color : black; qproperty-alignment: AlignCenter; font: nomal; border-color: rgb(255,255,255); padding: 5px;}");
     ui->label_qos_num->setText("0");
     ui->label_sub_state->setText("Unsubscribed");
+    ui->labelTcp->setStyleSheet("QLabel { background-color : red; color : black; qproperty-alignment: AlignCenter; font: bold; border-color: rgb(255,255,255); border-width: 2px; border-style: solid; border-radius: 9px; padding: 5px;}");
+    ui->labelTcp->setText("TCP/IP : Closed!");
 
     config = new settingsfile();
 
@@ -276,7 +278,6 @@ void MainWindow::onMqttSubMessage(QString message)
     message.remove(QChar('"'), Qt::CaseInsensitive);
     message.remove(QChar('}'), Qt::CaseInsensitive);
     message.remove(QChar('{'), Qt::CaseInsensitive);
-    console->printData(message);
     QStringList msg = message.split(",");
     foreach(QString typeValue, msg)
     {
@@ -285,7 +286,7 @@ void MainWindow::onMqttSubMessage(QString message)
         data.append(splitData[1]);
     }
 
-    QString _message = "ID: " + data.value(0).toString() + " - Device: " + data.value(1).toString() + " - " + attributes +": " + data.value(2).toString();
+    QString _message = "\nID: " + data.value(0).toString() + " - Device: " + data.value(1).toString() + " - " + attributes +": " + data.value(2).toString();
     console->printData(_message);
 
 

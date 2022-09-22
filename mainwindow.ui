@@ -92,7 +92,7 @@
        </palette>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -149,6 +149,7 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
+              <weight>75</weight>
               <italic>false</italic>
               <bold>true</bold>
               <underline>false</underline>
@@ -208,6 +209,7 @@
             <property name="font">
              <font>
               <pointsize>14</pointsize>
+              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -317,6 +319,13 @@
             </property>
             <property name="text">
              <string>Serial Port: Closed</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelTcp">
+            <property name="text">
+             <string>TCP/IP: Closed</string>
             </property>
            </widget>
           </item>
@@ -536,7 +545,7 @@
           <item>
            <widget class="QPushButton" name="subButton">
             <property name="text">
-             <string>PushButton</string>
+             <string>Subcribe Data</string>
             </property>
            </widget>
           </item>
