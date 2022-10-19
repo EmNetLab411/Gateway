@@ -91,13 +91,15 @@ MainWindow::MainWindow(QWidget *parent)
 //    request.setRawHeader("Content-Type", "application/fhir+json");
 //    connect(&test, &QNetworkAccessManager::finished, this, &MainWindow::testfunct);
 //    test.get(request);
-    restclient* rest = new restclient();
-    QThread* threadrest = new QThread();
-    rest->moveToThread(threadrest);
-    threadrest->start();
-    Udpclient* udp = new Udpclient();
-    connect(udp, &Udpclient::new_msg_state_received,mqttClient,&mqttclient::publishDataState);
-    connect(udp, &Udpclient::new_msg_global_position_received,mqttClient,&mqttclient::publishDataGlobalPosition);
+    restClient = new restclient();
+    thread_restclient = new QThread();
+    restClient->moveToThread(thread_restclient);
+    thread_restclient->start();
+    udpClient = new udpclient();
+    connect(udpClient, &udpclient::new_msg_state_received,mqttClient,&mqttclient::publishDataState);
+    connect(udpClient, &udpclient::new_msg_global_position_received,mqttClient,&mqttclient::publishDataGlobalPosition);
+    connect(restClient, &restclient::new_manual_control_received,udpClient,&udpclient::hold_manual_control_data);
+    connect(restClient, &restclient::new_command_received,udpClient,&udpclient::send_msg_command);
 }
 void MainWindow::testfunct(QNetworkReply *reply)
 {

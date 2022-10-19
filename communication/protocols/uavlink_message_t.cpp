@@ -10,7 +10,7 @@ void uavlink_message_t::setMessageId(MessageID msgid)
     _msgID = msgid;
 }
 
-void uavlink_message_t::setLenPayLoad(quint8 lenPayload)
+void uavlink_message_t::setLenPayLoad(MessageLength lenPayload)
 {
     _lenPayload = lenPayload;
 }
@@ -25,7 +25,7 @@ MessageID uavlink_message_t::getMessageID()
     return _msgID;
 }
 
-quint8 uavlink_message_t::getLenPlayLoad()
+quint8 uavlink_message_t::getLenPayLoad()
 {
     return _lenPayload;
 }

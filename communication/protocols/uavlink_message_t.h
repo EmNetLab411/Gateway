@@ -13,12 +13,12 @@ public:
     explicit uavlink_message_t(QObject *parent = nullptr);
 
     void setMessageId(MessageID msgid);
-    void setLenPayLoad(quint8 lenPayload);
+    void setLenPayLoad(MessageLength lenPayload);
     void setPayLoad(QByteArray payload);
     void Decode(QByteArray data);
 
     MessageID getMessageID();
-    quint8 getLenPlayLoad();
+    quint8 getLenPayLoad();
     QByteArray getPayLoad();
 
     QByteArray Encode();

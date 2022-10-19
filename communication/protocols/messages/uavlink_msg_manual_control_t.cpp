@@ -13,7 +13,7 @@ QByteArray uavlink_msg_manual_control_t::ToPackage()
 {
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
-
+    stream.setByteOrder(QDataStream::LittleEndian);
     stream << _Vx;
     stream << _Vy;
     stream << _Vz;

@@ -79,6 +79,9 @@ public:
 private:
     Ui::MainWindow *ui;
     Console* console;
+    restclient* restClient;
+    udpclient* udpClient;
+    QThread* thread_restclient;
     QThread* thread_lora;
     QString _organizationName, _appname;
     bool transceiverStarted, sended, detectedFlag, loraStarted, subcribeSuccess = false;

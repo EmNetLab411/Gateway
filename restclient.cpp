@@ -20,7 +20,7 @@ restclient::restclient(QObject *parent) : QObject(parent)
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &restclient::read_command);
     connect(timer, &QTimer::timeout,this, &restclient::read_manual_control);
-    timer->start(400);
+    timer->start(500);
 }
 
 
@@ -41,8 +41,9 @@ void restclient::handle_manual_control(QNetworkReply *reply)
     QDateTime dt = QDateTime :: currentDateTime();
     QJsonDocument _manual_control_json = QJsonDocument::fromJson(reply->readAll());
     QJsonArray manual_control_json = _manual_control_json.array();
+//    qDebug()<<manual_control_json[0].toObject().value("lastUpdateTs").toVariant().toLongLong();
     // check timeout < 1s
-    if (dt.toMSecsSinceEpoch() - manual_control_json[1].toObject().value("lastUpdateTs").toVariant().toLongLong() < 1000)
+    if (dt.toMSecsSinceEpoch() - manual_control_json[1].toObject().value("lastUpdateTs").toVariant().toLongLong() < 3000)
     {
         for(int i=0; i< manual_control_json.count(); i++)
         {
@@ -51,18 +52,15 @@ void restclient::handle_manual_control(QNetworkReply *reply)
             else if (manual_control_json[i].toObject().value("key") == "Vz") Vz = manual_control_json[i].toObject().value("value").toInt();
             else if (manual_control_json[i].toObject().value("key") == "Yawrate") Yawrate = manual_control_json[i].toObject().value("value").toInt();
         }
-//        qDebug() << Vx <<" "<<Vy<<" "<<Vz<<" "<<Yawrate;
-        uavlink_msg_manual_control_t test(Vx,Vy,Vz,Yawrate);
-        qDebug()<<test.ToPackage();
-        emit new_manual_control_received(Vx,Vy,Vz,Yawrate);
+        emit new_manual_control_received(Vx,Vy,Vz,Yawrate,true);
     }
+    else emit new_manual_control_received(Vx,Vy,Vz,Yawrate,false);
 }
 
 void restclient::handle_command(QNetworkReply *reply)
 {
     QDateTime dt = QDateTime :: currentDateTime();
     QJsonDocument _command_json = QJsonDocument::fromJson(reply->readAll());
-//    qDebug()<<_command_json.isEmpty();
     QJsonArray command_json = _command_json.array();
 
     int command_id = command_json[0].toObject().value("value").toInt();
@@ -79,9 +77,8 @@ void restclient::handle_command(QNetworkReply *reply)
             else if (command_json[i].toObject().value("key") == "mode_id") mode_id = command_json[i].toObject().value("value").toInt();
 
         }
-        uavlink_msg_command_t test(mode_id,param1,param2,param3,param4);
-        qDebug()<<test.ToPackage();
-
+//        uavlink_msg_command_t test(mode_id,param1,param2,param3,param4);
+//        qDebug()<<test.ToPackage();
         emit new_command_received(mode_id,param1,param2,param3,param4);
     }
 

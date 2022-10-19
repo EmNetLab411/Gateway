@@ -23,7 +23,8 @@ private:
     QByteArray command_request_url, manual_control_request_url, waypoint_request_url, control_robot_request_url;
     QByteArray command_key, manual_control_key, waypoint_key, control_robot_key;
     int lastest_command_id;
-    int Vx, Vy, Vz, Yawrate, mode_id;
+    int Vx, Vy, Vz, Yawrate;
+    qint16 mode_id;
     float param1, param2, param3, param4;
     QByteArray *command;
     QTime *time_now;
@@ -37,7 +38,7 @@ private:
     QNetworkRequest control_robot_request;
 signals:
     void new_command_received(qint16 id, float param1, float param2, float param3, float param4);
-    void new_manual_control_received(qint16 vx, qint16 vy, qint16 vz, qint16 yawrate);
+    void new_manual_control_received(qint16 vx, qint16 vy, qint16 vz, qint16 yawrate,bool is_new);
     void new_waypoint_received(qint16 waypointId, qint32 lat, qint32 lon, qint32 alt);
     void control_robot_received(quint16 step1, quint16 step2, quint16 step3, quint16 step4, quint16 step5);
 private slots:

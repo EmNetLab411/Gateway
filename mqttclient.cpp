@@ -170,7 +170,6 @@ void mqttclient::publishDataGlobalPosition(QByteArray msg)
     QJsonDocument msg_mqtt_doc;
     msg_mqtt_doc.setObject(msg_mqtt);
     _topic = config->topic_gateway_attribute;
-    qDebug()<<msg_mqtt_doc.toJson();
     m_client->publish(_topic, msg_mqtt_doc.toJson());
 }
 

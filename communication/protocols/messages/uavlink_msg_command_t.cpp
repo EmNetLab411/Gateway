@@ -13,7 +13,8 @@ QByteArray uavlink_msg_command_t::ToPackage()
 {
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
-    stream.setFloatingPointPrecision(QDataStream::SinglePrecision); // dat float 32bit
+    stream.setFloatingPointPrecision(QDataStream::SinglePrecision); // dat float use 32bit
+    stream.setByteOrder(QDataStream::LittleEndian);
     stream << _Mode_Id;
     stream << _Param1;
     stream << _Param2;

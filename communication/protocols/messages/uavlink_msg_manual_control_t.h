@@ -4,6 +4,7 @@
 #include <QObject>
 #include <iostream>
 #include <QDataStream>
+#include <QDebug>
 
 class uavlink_msg_manual_control_t : public QObject
 {

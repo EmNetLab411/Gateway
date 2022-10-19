@@ -68,7 +68,7 @@ void serialport::readData()
                 message->Decode(messageByteArray);
 
                 qDebug() << "msgID: " << message->getMessageID();
-                qDebug() << "lenPayload: " << message->getLenPlayLoad();
+                qDebug() << "lenPayload: " << message->getLenPayLoad();
                 qDebug() << "MessageSize" << messageByteArray.size();
 
                 switch (message->getMessageID())
