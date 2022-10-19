@@ -81,8 +81,28 @@ MainWindow::MainWindow(QWidget *parent)
     //connect(lora, &serconfig->updateConfigSettings();ialport::signalReceivedData, mqttClient, &mqttclient::publishDataSensor);
     connect(lora, &serialport::signalReceivedData, mqttClient, &mqttclient::publishDataSensorAsGateway);
     connect(mqttClient, &mqttclient::signalSubcribe, this, &MainWindow::onSubcribeTopic);
-}
 
+//    QNetworkRequest request(QUrl("https://reqres.in/api/users?page=2"));
+//    qDebug()<<request.hasRawHeader();
+//    request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
+//    QNetworkReply *reply = test->get(request);
+//    qDebug()<< reply->readAll();
+//    QNetworkRequest request(QUrl("https://demo.thingsboard.io/api/v1/PqEMhRTVsAj8fav4ZfoH/attributes?clientKeys=attribute1,attribute2"));
+//    request.setRawHeader("Content-Type", "application/fhir+json");
+//    connect(&test, &QNetworkAccessManager::finished, this, &MainWindow::testfunct);
+//    test.get(request);
+    restclient* rest = new restclient();
+    QThread* threadrest = new QThread();
+    rest->moveToThread(threadrest);
+    threadrest->start();
+    Udpclient* udp = new Udpclient();
+    connect(udp, &Udpclient::new_msg_state_received,mqttClient,&mqttclient::publishDataState);
+    connect(udp, &Udpclient::new_msg_global_position_received,mqttClient,&mqttclient::publishDataGlobalPosition);
+}
+void MainWindow::testfunct(QNetworkReply *reply)
+{
+    qDebug()<< reply->readAll();
+}
 MainWindow::~MainWindow()
 {
     mqttClient->disconnectToGateway();
@@ -272,7 +292,6 @@ void MainWindow::onMqttSubUpdateState(QString state)
 
 void MainWindow::onMqttSubMessage(QString message)
 {
-
     QVector<QString> type;
     QVector<QVariant> data;
     message.remove(QChar('"'), Qt::CaseInsensitive);
@@ -324,13 +343,13 @@ void MainWindow::on_clearButton_clicked()
 
 void MainWindow::on_subButton_clicked()
 {
-    mqttClient->publishAttributesResponse(1, "Sensor 1", "Latitude");
-    attributes = "Latitude";
+    mqttClient->publishAttributesResponse(1, "Sensor1", "attribute1");
+    attributes = "attribute1";
 }
 
 void MainWindow::on_get_video_forward_clicked()
 {
-    _media_forward = new VlcMedia("http://192.168.1.10:9000/", _instance);
+    _media_forward = new VlcMedia("http://192.168.0.50:9000/", _instance);
     //reduce latency
     QStringList option_list;
            option_list.append(":network-caching=10");
@@ -346,7 +365,7 @@ void MainWindow::on_get_video_forward_clicked()
 
 void MainWindow::on_get_video_below_clicked()
 {
-    _media_below = new VlcMedia("http://192.168.1.10:8080/stream?topic=/main_camera/image_raw", _instance);
+    _media_below = new VlcMedia("http://192.168.0.50:8080/stream?topic=/main_camera/image_raw", _instance);
     //reduce latency
     QStringList option_list;
            option_list.append(":network-caching=100");

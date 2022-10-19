@@ -13,23 +13,23 @@ public:
     ~uavlink_msg_global_position_t();
 
     void Decode(QByteArray data);
-    double getLatitude();
-    double getLongitude();
-    float getAltitude();
-    float getVx();
-    float getVy();
-    float getVz();
-    float getRotation();
+    qint32 getLatitude();
+    qint32 getLongitude();
+    qint16 getAltitude();
+    qint16 getVx();
+    qint16 getVy();
+    qint16 getVz();
+    qint16 getYaw();
 signals:
 
 private:
-    qint64 _lat;
-    qint64 _lon;
-    qint32 _alt;
-    qint32 _vx;
-    qint32 _vy;
-    qint32 _vz;
-    qint32 _rotation;
+    qint32 _lat;
+    qint32 _lon;
+    qint16 _alt;
+    qint16 _vx;
+    qint16 _vy;
+    qint16 _vz;
+    qint16 _yaw;
 };
 
 #endif // UAVLINK_MSG_GLOBAL_POSITION_T_H

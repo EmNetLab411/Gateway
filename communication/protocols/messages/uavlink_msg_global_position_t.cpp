@@ -21,41 +21,40 @@ void uavlink_msg_global_position_t::Decode(QByteArray data)
     dataStream >> _vx;
     dataStream >> _vy;
     dataStream >> _vz;
-    dataStream >> _rotation;
-
+    dataStream >> _yaw;
 }
 
-double uavlink_msg_global_position_t::getLatitude()
+qint32 uavlink_msg_global_position_t::getLatitude()
 {
-    return ((double) _lat) / 10000000.0f;
+    return _lat;
 }
 
-double uavlink_msg_global_position_t::getLongitude()
+qint32 uavlink_msg_global_position_t::getLongitude()
 {
-    return ((double)_lon) / 10000000.0f;
+    return _lon;
 }
 
-float uavlink_msg_global_position_t::getAltitude()
+qint16 uavlink_msg_global_position_t::getAltitude()
 {
-    return ((float)_alt) / 100.0f;
+    return _alt;
 }
 
-float uavlink_msg_global_position_t::getVx()
+qint16 uavlink_msg_global_position_t::getVx()
 {
-    return ((float)_vx) / 100.0f;
+    return _vx;
 }
 
-float uavlink_msg_global_position_t::getVy()
+qint16 uavlink_msg_global_position_t::getVy()
 {
-    return ((float)_vy) / 100.0f;
+    return _vy;
 }
 
-float uavlink_msg_global_position_t::getVz()
+qint16 uavlink_msg_global_position_t::getVz()
 {
-    return ((float)_vz) / 100.0f;
+    return _vz;
 }
 
-float uavlink_msg_global_position_t::getRotation()
+qint16 uavlink_msg_global_position_t::getYaw()
 {
-    return (float) _rotation;
+    return _yaw;
 }

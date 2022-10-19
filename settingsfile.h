@@ -53,7 +53,7 @@ class settingsfile
 
 public:
     settingsfile();
-    QString SETTINGS_FILE_PATH = "./WSAN/config.txt";
+    QString SETTINGS_FILE_PATH = "./config.txt";
     QStringList readData;
 
     QString IMAGES_FILE;

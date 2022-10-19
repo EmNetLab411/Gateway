@@ -6,11 +6,20 @@ mqttclient::mqttclient(QObject *parent, QString hostName, qint16 port) : QObject
     m_client = new QMqttClient(this);
     m_client->setHostname(hostName);
     m_client->setPort(port);
-    m_client->setUsername(config->ACCESS_TOKEN_H);
+    qDebug()<<hostName<<port;
+    m_client->setUsername("c9Q9xAXBosjcysnDy6C3");
 
     connect(m_client, &QMqttClient::stateChanged, this, &mqttclient::updateLogStateChange);
     connect(m_client, &QMqttClient::disconnected, this, &mqttclient::brokerDisconnected);
-
+    connect(m_client, &QMqttClient::messageReceived, this, [this](const QByteArray &message, const QMqttTopicName &topic) {
+            const QString content = QDateTime::currentDateTime().toString()
+                        + QLatin1String(" Received Topic: ")
+                        + topic.name()
+                        + QLatin1String(" Message: ")
+                        + message
+                        + QLatin1Char('\n');
+            qDebug()<<content;
+        });
 }
 
 mqttclient::~mqttclient()
@@ -23,6 +32,7 @@ void mqttclient::connectToHost()
     if(m_client->state() == QMqttClient::Disconnected)
     {
         m_client->connectToHost();
+
     }
 }
 
@@ -30,6 +40,7 @@ void mqttclient::disconnectToHost()
 {
     if(m_client->state() == QMqttClient::Connected)
     {
+        qDebug()<<"why";
         m_client->disconnectFromHost();
     }
 }
@@ -67,8 +78,10 @@ void mqttclient::updateLogStateChange()
 
 void mqttclient::brokerDisconnected()
 {
+
     if(m_client->state() == QMqttClient::Connected)
     {
+        qDebug()<<"why";
         m_client->disconnectFromHost();
     }
 }
@@ -135,6 +148,32 @@ void mqttclient::publishTypeSensor(int sensorID, QString type, QVariant data, ui
     m_client->publish(_topic, gatewayTele);
 }
 
+void mqttclient::publishDataState(QByteArray msg)
+{
+    uavlink_msg_state_t state;
+    state.Decode(msg);
+    QJsonObject msg_state = {{"Connected",state.getConnected()},{"Armed",state.getArmed()},{"Baterry",state.getBattery()},{"Mode",state.getMode()}};
+    QJsonObject msg_mqtt = {{"State",QJsonValue(msg_state)}};
+    QJsonDocument msg_mqtt_doc;
+    msg_mqtt_doc.setObject(msg_mqtt);
+    _topic = config->topic_gateway_attribute;
+    m_client->publish(_topic, msg_mqtt_doc.toJson());
+}
+
+void mqttclient::publishDataGlobalPosition(QByteArray msg)
+{
+    uavlink_msg_global_position_t global_position;
+    global_position.Decode(msg);
+    QJsonObject msg_global_position = {{"Latitude",global_position.getLatitude()},{"Longitude",global_position.getLongitude()},{"Altitude",global_position.getAltitude()},
+                                       {"Vx",global_position.getVx()},{"Vy",global_position.getVy()},{"Vz",global_position.getVz()},{"Yaw",global_position.getYaw()}};
+    QJsonObject msg_mqtt = {{"Global Position",QJsonValue(msg_global_position)}};
+    QJsonDocument msg_mqtt_doc;
+    msg_mqtt_doc.setObject(msg_mqtt);
+    _topic = config->topic_gateway_attribute;
+    qDebug()<<msg_mqtt_doc.toJson();
+    m_client->publish(_topic, msg_mqtt_doc.toJson());
+}
+
 void mqttclient::publishAttributesTypeSensor(int sensorID, QString type, QVariant data, int numberPrefix)
 {
     QString payload = "{\"Sensor " + QString::number(sensorID) + "\":{\"";
@@ -161,13 +200,15 @@ void mqttclient::publishAttributesResponse(int requestId, QString device, QStrin
 
 void mqttclient::Subscribe()
 {
-    _topic = config->topic_gateway_attribute_response;
+    _topic = config->topic_gateway_attribute;
     auto subcribtion = m_client->subscribe(_topic);
     if(!subcribtion)
     {
+
         emit signalSubcribe(false);
     } else
     {
+
         sub = new mqttsubscription(subcribtion, this);
         emit signalSubcribe(true);
     }

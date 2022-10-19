@@ -20,3 +20,23 @@ void uavlink_msg_state_t::Decode(QByteArray data)
     test >> _mode;
     test >> _batterty;
 }
+
+int uavlink_msg_state_t::getConnected()
+{
+    return _connected;
+}
+
+int uavlink_msg_state_t::getArmed()
+{
+    return _armed;
+}
+
+int uavlink_msg_state_t::getMode()
+{
+    return _mode;
+}
+
+int uavlink_msg_state_t::getBattery()
+{
+    return _batterty;
+}

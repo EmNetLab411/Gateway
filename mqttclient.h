@@ -10,6 +10,8 @@
 
 #include "settingsfile.h"
 #include "mqttsubscription.h"
+#include "communication/protocols/messages/uavlink_msg_state_t.h"
+#include "communication/protocols/messages/uavlink_msg_global_position_t.h"
 
 class mqttclient : public QObject
 {
@@ -33,6 +35,8 @@ public slots:
     void Publish(QString message);
     void publishDataSensor(int sensorID, double lat, double lon, float temp, float hum, float dust);
     void publishDataSensorAsGateway(int sensorID, double lat, double lon, float temp, float hum, float dust);
+    void publishDataState(QByteArray msg);
+    void publishDataGlobalPosition(QByteArray msg);
     void Subscribe();
     void updateLogStateChange();
     void brokerDisconnected();

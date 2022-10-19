@@ -9,8 +9,10 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    communication/protocols/messages/uavlink_msg_command_t.cpp \
     communication/protocols/messages/uavlink_msg_global_position_t.cpp \
     communication/protocols/messages/uavlink_msg_local_position_t.cpp \
+    communication/protocols/messages/uavlink_msg_manual_control_t.cpp \
     communication/protocols/messages/uavlink_msg_sensor_t.cpp \
     communication/protocols/messages/uavlink_msg_setwp_t.cpp \
     communication/protocols/messages/uavlink_msg_state_t.cpp \
@@ -20,14 +22,18 @@ SOURCES += \
     mainwindow.cpp \
     mqttclient.cpp \
     mqttsubscription.cpp \
+    restclient.cpp \
     serialport.cpp \
-    settingsfile.cpp
+    settingsfile.cpp\
+    udpclient.cpp
 
 HEADERS += \
     communication/messages/messageID.h \
     communication/protocols/messages/messageID.h \
+    communication/protocols/messages/uavlink_msg_command_t.h \
     communication/protocols/messages/uavlink_msg_global_position_t.h \
     communication/protocols/messages/uavlink_msg_local_position_t.h \
+    communication/protocols/messages/uavlink_msg_manual_control_t.h \
     communication/protocols/messages/uavlink_msg_sensor_t.h \
     communication/protocols/messages/uavlink_msg_setwp_t.h \
     communication/protocols/messages/uavlink_msg_state_t.h \
@@ -37,8 +43,10 @@ HEADERS += \
     messageID.h \
     mqttclient.h \
     mqttsubscription.h \
+    restclient.h \
     serialport.h \
-    settingsfile.h
+    settingsfile.h \
+    udpclient.h
 
 FORMS += \
     mainwindow.ui

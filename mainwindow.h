@@ -9,14 +9,17 @@
 #include <QLabel>
 
 #include "communication/protocols/messages/messageID.h"
+#include "udpclient.h"
 #include "settingsfile.h"
 #include "console.h"
 #include "serialport.h"
 #include "mqttclient.h"
+#include "restclient.h"
 #include <VLCQtCore/Common.h>
 #include <VLCQtCore/Instance.h>
 #include <VLCQtCore/Media.h>
 #include <VLCQtCore/MediaPlayer.h>
+#include <QNetworkAccessManager>
 
 #include <QJsonDocument>
 #include <QJsonParseError>
@@ -39,6 +42,7 @@ public:
     void createMqttClient();
     void AlwaysOpenSerialPort();
 
+
 private:
 
 
@@ -57,7 +61,7 @@ private slots:
     void onMqttSubUpdateState(QString state);
     void onMqttSubMessage(QString message);
     void onMqttSubQos(quint8 qos);
-
+    void testfunct(QNetworkReply *reply);
     void on_disconnectMqttButton_clicked();
 
     void on_connectMqttButton_clicked();

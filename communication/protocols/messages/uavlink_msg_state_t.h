@@ -13,6 +13,10 @@ public:
     explicit uavlink_msg_state_t(QObject *parent = nullptr);
     ~uavlink_msg_state_t();
     void Decode(QByteArray data);
+    int getConnected();
+    int getArmed();
+    int getMode();
+    int getBattery();
 
 signals:
 
