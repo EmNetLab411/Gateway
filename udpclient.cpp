@@ -17,6 +17,8 @@ udpclient::~udpclient()
 {
     qDebug()<<"destroy";
 }
+
+//message from  UAV to thingsboard
 void udpclient::handle_new_msg()
 {
     while (socket->hasPendingDatagrams()) {
@@ -36,6 +38,8 @@ void udpclient::handle_new_msg()
             }
         }
 }
+
+//message from thingsboard to UAV
 void udpclient::send_msg_manual_control()
 {
     if(_is_new_msg_manual_control)
@@ -63,5 +67,15 @@ void udpclient::send_msg_command(qint16 mode_id, float param1, float param2, flo
     msg.setMessageId(UAVLINK_MSG_ID_COMMAND);
     msg.setLenPayLoad(UAVLINK_MSG_ID_COMMAND_LEN);
     msg.setPayLoad(command_msg.ToPackage());
+    socket->writeDatagram(msg.Encode(),QHostAddress::LocalHost,12345);
+}
+void udpclient::send_msg_control_robot(qint32 Step1, qint32 Step2, qint32 Step3, qint32 Step4, qint32 Step5)
+{
+    uavlink_msg_control_robot_t control_robot_msg(Step1, Step2, Step3, Step4, Step5);
+    uavlink_message_t msg;
+    msg.setMessageId(UAVLINK_MSG_ID_ROBOT_CONTROL);
+    msg.setLenPayLoad(UAVLINK_MSG_ID_ROBOT_CONTROL_LEN);
+    msg.setPayLoad(control_robot_msg.ToPackage());
+    qDebug()<<msg.Encode().size();
     socket->writeDatagram(msg.Encode(),QHostAddress::LocalHost,12345);
 }

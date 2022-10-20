@@ -7,6 +7,7 @@
 #include "communication/protocols/uavlink_message_t.h"
 #include "communication/protocols/messages/uavlink_msg_manual_control_t.h"
 #include "communication/protocols/messages/uavlink_msg_command_t.h"
+#include "communication/protocols/messages/uavlink_msg_control_robot_t.h"
 #include <QTimer>
 
 class udpclient : public QObject
@@ -28,6 +29,7 @@ public slots:
     void handle_new_msg();
     void hold_manual_control_data(qint32 Vx, qint32 Vy, qint32 Vz, qint32 Yawrate, bool is_new);
     void send_msg_command(qint16 mode_id, float param1, float param2, float param3, float param4);
+    void send_msg_control_robot(qint32 Step1, qint32 Step2, qint32 Step3, qint32 Step4, qint32 Step5);
 };
 
 #endif // UDPCLIENT_H

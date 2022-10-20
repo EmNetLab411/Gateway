@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     communication/protocols/messages/uavlink_msg_command_t.cpp \
+    communication/protocols/messages/uavlink_msg_control_robot_t.cpp \
     communication/protocols/messages/uavlink_msg_global_position_t.cpp \
     communication/protocols/messages/uavlink_msg_local_position_t.cpp \
     communication/protocols/messages/uavlink_msg_manual_control_t.cpp \
@@ -31,6 +32,7 @@ HEADERS += \
     communication/messages/messageID.h \
     communication/protocols/messages/messageID.h \
     communication/protocols/messages/uavlink_msg_command_t.h \
+    communication/protocols/messages/uavlink_msg_control_robot_t.h \
     communication/protocols/messages/uavlink_msg_global_position_t.h \
     communication/protocols/messages/uavlink_msg_local_position_t.h \
     communication/protocols/messages/uavlink_msg_manual_control_t.h \
