@@ -33,6 +33,9 @@ void udpclient::handle_new_msg()
                 case UAVLINK_MSG_ID_GLOBAL_POSITION:
                     emit new_msg_global_position_received(uavlink_msg.getPayLoad());
                     break;
+                case UAVLINK_MSG_ID_SENSOR:
+                    emit new_msg_sensor_received(uavlink_msg.getPayLoad());
+                    break;
                 default:
                     qDebug()<<"unknown uavlink message id";
             }

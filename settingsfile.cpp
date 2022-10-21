@@ -37,12 +37,6 @@ void settingsfile::readFile(QString dataType, QString data)
         case GPS_BAUDRATE:
             this->GPS_BAUDRATE_DEFAULT = data.toInt();
             break;
-        case LORA_PORT:
-            this->LORA_PORT_DEFAULT = data;
-            break;
-        case LORA_BAUDRATE:
-            this->LORA_BAUDRATE_DEFAULT = data.toInt();
-            break;
         case SERIAL_READ_SPEED:
             this->SERIAL_READ_SPEED_T = data.toInt();
             break;
@@ -109,8 +103,6 @@ void settingsfile::Initialize()
     s_mapStringValues["TRANSCEIVER_BAURATE"] = TRANSCEIVER_BAURATE;
     s_mapStringValues["GPS_PORT"] = GPS_PORT;
     s_mapStringValues["GPS_BAUDRATE"] = GPS_BAUDRATE;
-    s_mapStringValues["LORA_PORT"] = LORA_PORT;
-    s_mapStringValues["LORA_BAUDRATE"] = LORA_BAUDRATE;
     s_mapStringValues["SERIAL_READ_SPEED"] = SERIAL_READ_SPEED;
     s_mapStringValues["CONF_THRESOL_FILE_PATH"] = CONF_THRESOL_FILE_PATH;
     s_mapStringValues["IMAGES_FILE_PATH"] = IMAGES_FILE_PATH;

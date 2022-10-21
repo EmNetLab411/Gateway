@@ -36,11 +36,6 @@ MainWindow::MainWindow(QWidget *parent)
     QPixmap pix(":/resource/icon/Lab_logo.jpg");
     ui->labelLabIcon->setPixmap(pix.scaled(200, 200));
 
-    lora = new serialport();
-    loraStarted = false;
-    thread_lora = new QThread();
-    lora->moveToThread(thread_lora);
-
     // video vlc
     _instance = new VlcInstance(VlcCommon::args(), this);
     _player_forward = new VlcMediaPlayer(_instance);
@@ -64,22 +59,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->video_below->setCropRatio(r);
     ui->video_below->enableDefaultSettings();
 
-
-    //connect
-    connect(lora, &serialport::signalOpenSerialPort, thread_lora, &QThread::start);
-    connect(thread_lora, &QThread::started, lora, &serialport::openSerialPort);
-    connect(lora, &serialport::signalReceivedData, this, &MainWindow::onPrintSensorData);
-    connect(lora->timer, &QTimer::timeout, this, &MainWindow::checkSerialPort);
-
-    checkSerialPort();
     createMqttClient();
 
     connect(this, &MainWindow::signalMqttPublic, mqttClient, &mqttclient::Publish);
     connect(mqttClient->m_client, &QMqttClient::connected, this, &MainWindow::onMqttConntected);
     connect(mqttClient->m_client, &QMqttClient::disconnected, this, &MainWindow::onMqttDisconnect);
     connect(mqttClient->m_client, &QMqttClient::connected, mqttClient, &mqttclient::connectToGateway);
-    //connect(lora, &serconfig->updateConfigSettings();ialport::signalReceivedData, mqttClient, &mqttclient::publishDataSensor);
-    connect(lora, &serialport::signalReceivedData, mqttClient, &mqttclient::publishDataSensorAsGateway);
     connect(mqttClient, &mqttclient::signalSubcribe, this, &MainWindow::onSubcribeTopic);
 
 //    QNetworkRequest request(QUrl("https://reqres.in/api/users?page=2"));
@@ -98,6 +83,7 @@ MainWindow::MainWindow(QWidget *parent)
     udpClient = new udpclient();
     connect(udpClient, &udpclient::new_msg_state_received,mqttClient,&mqttclient::publishDataState);
     connect(udpClient, &udpclient::new_msg_global_position_received,mqttClient,&mqttclient::publishDataGlobalPosition);
+    connect(udpClient, &udpclient::new_msg_sensor_received,mqttClient,&mqttclient::publishDataSensor);
     connect(restClient, &restclient::new_manual_control_received,udpClient,&udpclient::hold_manual_control_data);
     connect(restClient, &restclient::new_command_received,udpClient,&udpclient::send_msg_command);
     connect(restClient, &restclient::new_control_robot_received,udpClient,&udpclient::send_msg_control_robot);
@@ -111,8 +97,6 @@ MainWindow::~MainWindow()
     mqttClient->disconnectToGateway();
     mqttClient->disconnectToHost();
     delete config;
-    delete thread_lora;
-    delete lora;
     delete ui;
 }
 
@@ -127,64 +111,6 @@ void MainWindow::createMqttClient()
 
     onMqttConnecting();
 }
-
-void MainWindow::AlwaysOpenSerialPort()
-{
-    settingsfile config;
-    if(loraStarted)
-    {
-        if(lora->port->isOpen())
-        {
-            lora->port->close();
-            console->insertPlainText("\n-------------- Lora Closed -------------\n");
-        }
-        else
-        {
-            if(lora->port->portName().isEmpty())
-            {
-                lora->port->setPortName(config.LORA_PORT_DEFAULT);
-            }
-            QSettings settings(_organizationName, _appname);
-            QString tmp = settings.value("TranceiverBaudrate").toString();
-            if(tmp.isEmpty())
-            {
-                lora->port->setBaudRate((BaudRateType) config.LORA_BAUDRATE_DEFAULT);
-            }
-            lora->port->open(QIODevice::ReadWrite);
-            console->insertPlainText("\n------------- Port Lora Data Opened ------------\n");
-        }
-    }
-    else
-    {
-        lora->requestOpenSerialPort();
-        console->insertPlainText("\n-------------- Port Lora Data Opened -------------\n");
-        loraStarted = true;
-    }
-}
-
-void MainWindow::onPrintSensorData(int idSensor, double lat, double lon, float temp, float hum, float dust)
-{
-
-    QString tmp = "\n[" + QTime::currentTime().toString() + "]" + " Collect data from sensor: "+ QString::number(idSensor) +"\r\n";
-    tmp += "Latitude: ";
-    tmp += QString::number(lat, 'f', 10);
-    tmp += "    ||    Longitude: ";
-    tmp += QString::number(lon, 'f', 10);
-    tmp += "\nTemperature: ";
-    tmp += QString::number(temp);
-    tmp += " oC    ||    Humidity: ";
-    tmp += QString::number(hum);
-    tmp += " %    ||    Dust: ";
-    tmp += QString::number(dust);
-    tmp += " %\n";
-
-
-
-    console->printData(tmp);
-
-
-}
-
 
 void MainWindow::on_pushButton_clicked()
 {
@@ -252,39 +178,6 @@ void MainWindow::onSubcribeTopic(bool result)
         connect(mqttClient->sub, &mqttsubscription::signalUpdateSubState, this, &MainWindow::onMqttSubUpdateState);
         connect(mqttClient->sub, &mqttsubscription::signalUpdateSubQos, this, &MainWindow::onMqttSubQos);
 
-    }
-}
-
-void MainWindow::checkSerialPort()
-{
-    if(!lora->port->isOpen())
-    {
-        ui->labelSerialPort->setStyleSheet("QLabel { background-color : red; "
-                                          "color : black; "
-                                          "qproperty-alignment: AlignCenter; "
-                                          "font: bold;"
-                                          "border-color: rgb(255,255,255); "
-                                          "border-width: 2px; "
-                                          "border-style: solid; "
-                                          "border-radius: 9px; "
-                                          "padding: 5px;}");
-        ui->labelSerialPort->setText("Serial Port: Closed!!!");
-
-        lora->requestOpenSerialPort();
-        console->insertPlainText("\n-------------- Port Lora Data Opened -------------\n");
-    }
-    else
-    {
-        ui->labelSerialPort->setStyleSheet("QLabel { background-color : green; "
-                                          "color : black; "
-                                          "qproperty-alignment: AlignCenter; "
-                                          "font: bold;"
-                                          "border-color: rgb(255,255,255); "
-                                          "border-width: 2px; "
-                                          "border-style: solid; "
-                                          "border-radius: 9px; "
-                                          "padding: 5px;}");
-        ui->labelSerialPort->setText("Serial Port: Opened!!!");
     }
 }
 

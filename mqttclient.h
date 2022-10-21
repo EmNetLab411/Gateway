@@ -12,6 +12,7 @@
 #include "mqttsubscription.h"
 #include "communication/protocols/messages/uavlink_msg_state_t.h"
 #include "communication/protocols/messages/uavlink_msg_global_position_t.h"
+#include "communication/protocols/messages/uavlink_msg_sensor_t.h"
 
 class mqttclient : public QObject
 {
@@ -23,8 +24,6 @@ public:
     void connectToHost();
     void disconnectToHost();
     void disconnectToGateway();
-    void publishTypeSensor(int sensorID, QString type, QVariant data, uint timestame, int numberPrefix);
-    void publishAttributesTypeSensor(int sensorID, QString type, QVariant data, int numberPrefix);
     void publishAttributesResponse(int requestId, QString device, QString value);
 
 signals:
@@ -33,8 +32,7 @@ signals:
 public slots:
     void setClientPort(int p);
     void Publish(QString message);
-    void publishDataSensor(int sensorID, double lat, double lon, float temp, float hum, float dust);
-    void publishDataSensorAsGateway(int sensorID, double lat, double lon, float temp, float hum, float dust);
+    void publishDataSensor(QByteArray msg);
     void publishDataState(QByteArray msg);
     void publishDataGlobalPosition(QByteArray msg);
     void Subscribe();

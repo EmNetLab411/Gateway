@@ -24,7 +24,6 @@ SOURCES += \
     mqttclient.cpp \
     mqttsubscription.cpp \
     restclient.cpp \
-    serialport.cpp \
     settingsfile.cpp\
     udpclient.cpp
 
@@ -46,7 +45,6 @@ HEADERS += \
     mqttclient.h \
     mqttsubscription.h \
     restclient.h \
-    serialport.h \
     settingsfile.h \
     udpclient.h
 

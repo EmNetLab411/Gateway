@@ -11,10 +11,11 @@ class uavlink_msg_sensor_t : public QObject
     Q_OBJECT
 public:
     explicit uavlink_msg_sensor_t(QObject *parent = nullptr);
+    ~uavlink_msg_sensor_t();
     int getSensorID();
     float getTemp();
     float getHum();
-    float getDust();
+    float getGas();
     double getLat();
     double getLon();
     QByteArray getData();
@@ -28,7 +29,7 @@ private:
     qint16 _id;
     qint16 _temp;
     qint16 _hum;
-    qint16 _dust;
+    qint16 _gas;
 
 };
 

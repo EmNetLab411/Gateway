@@ -4,6 +4,10 @@ uavlink_msg_sensor_t::uavlink_msg_sensor_t(QObject *parent) : QObject(parent)
 {
 
 }
+uavlink_msg_sensor_t::~uavlink_msg_sensor_t()
+{
+
+}
 
 int uavlink_msg_sensor_t::getSensorID()
 {
@@ -20,9 +24,9 @@ float uavlink_msg_sensor_t::getHum()
     return _hum / 100.0f;
 }
 
-float uavlink_msg_sensor_t::getDust()
+float uavlink_msg_sensor_t::getGas()
 {
-    return _dust / 100.0f;
+    return _gas / 100.0f;
 }
 
 double uavlink_msg_sensor_t::getLat()
@@ -46,7 +50,7 @@ void uavlink_msg_sensor_t::Decode(QByteArray data)
     test >> _lon;
     test >> _temp;
     test >> _hum;
-    test >> _dust;
+    test >> _gas;
 
 
 }

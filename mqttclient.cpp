@@ -104,48 +104,17 @@ void mqttclient::Publish(QString message)
 
 }
 
-void mqttclient::publishDataSensor(int sensorID, double lat, double lon, float temp, float hum, float dust)
+void mqttclient::publishDataSensor(QByteArray msg)
 {
-    _topic = config->topic_device_telemetry;
-    QString message = "{\"Temperature\":\""+ QString::number(temp) +
-            "\" , \"Humidity\":\""+ QString::number(hum) +
-            "\", \"Dust Density\":\""+ QString::number(dust) +
-            "\" , \"Latitude\":\""+ QString::number(lat, 'f', 8) +
-            "\" , \"Longitude\":\""+ QString::number(lon, 'f', 8) + "\"}";
-    QByteArray publicMessage = message.toUtf8();
-    m_client->publish(_topic, publicMessage);
-}
-
-void mqttclient::publishDataSensorAsGateway(int sensorID, double lat, double lon, float temp, float hum, float dust)
-{
-    QDateTime current = QDateTime::currentDateTime();
-    uint timestame = current.toTime_t();
-    publishTypeSensor(sensorID, "Latitude", lat, timestame, 7);
-    publishTypeSensor(sensorID, "Longitude", lon, timestame, 7);
-    publishTypeSensor(sensorID, "Temperture", temp, timestame, 2);
-    publishTypeSensor(sensorID, "Humidity", hum, timestame, 2);
-    publishTypeSensor(sensorID, "Dust Density", dust, timestame, 2);
-
-    publishAttributesTypeSensor(sensorID, "Latitude", lat, 7);
-    publishAttributesTypeSensor(sensorID, "Longitude", lon, 7);
-    publishAttributesTypeSensor(sensorID, "Temperture", temp, 2);
-    publishAttributesTypeSensor(sensorID, "Humidity", hum, 2);
-    publishAttributesTypeSensor(sensorID, "Dust Density", dust, 2);
-}
-
-void mqttclient::publishTypeSensor(int sensorID, QString type, QVariant data, uint timestame, int numberPrefix)
-{
-    QString payload = "{\"";
-    payload += "Sensor ";
-    payload += QString::number(sensorID);
-    payload += "\": [{\"ts\":";
-    payload += QString::number(timestame);payload+="000,\"values\":";
-    payload += "{\""+ type+ "\":";
-    payload += QString::number(data.toFloat(), 'f', numberPrefix);
-    payload += "}}]}";
-    QByteArray gatewayTele(payload.toUtf8());
-    _topic = config->topic_gateway_telemetry;
-    m_client->publish(_topic, gatewayTele);
+   uavlink_msg_sensor_t sensor;
+   sensor.Decode(msg);
+   QJsonObject msg_sensor = {{"SensorID",sensor.getSensorID()}, {"Latitude",sensor.getLat()}, {"Longitude",sensor.getLon()},
+                            {"Temperature",sensor.getTemp()}, {"Huminity",sensor.getHum()}, {"Gas",sensor.getGas()}};
+   QJsonObject msg_mqtt = {{"Sensor", QJsonValue(msg_sensor)}};
+   QJsonDocument msg_mqtt_doc;
+   msg_mqtt_doc.setObject(msg_mqtt);
+   _topic = config->topic_gateway_attribute;
+   m_client->publish(_topic, msg_mqtt_doc.toJson());
 }
 
 void mqttclient::publishDataState(QByteArray msg)
@@ -173,17 +142,6 @@ void mqttclient::publishDataGlobalPosition(QByteArray msg)
     m_client->publish(_topic, msg_mqtt_doc.toJson());
 }
 
-void mqttclient::publishAttributesTypeSensor(int sensorID, QString type, QVariant data, int numberPrefix)
-{
-    QString payload = "{\"Sensor " + QString::number(sensorID) + "\":{\"";
-    payload += type + "\":";
-    payload += QString::number(data.toFloat(), 'f', numberPrefix);
-    payload += "}}";
-    QByteArray gatewayAttrib(payload.toUtf8());
-    _topic = config->topic_gateway_attribute;
-    m_client->publish(_topic, gatewayAttrib);
-}
-
 void mqttclient::publishAttributesResponse(int requestId, QString device, QString value)
 {
     QString payload = "{\"id\":" + QString::number(requestId) + ",";
@@ -193,9 +151,7 @@ void mqttclient::publishAttributesResponse(int requestId, QString device, QStrin
     QByteArray subAttrib(payload.toUtf8());
     _topic = config->topic_gateway_attribute_request;
     m_client->publish(_topic, subAttrib);
-
 }
-
 
 void mqttclient::Subscribe()
 {

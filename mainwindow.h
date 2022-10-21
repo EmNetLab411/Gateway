@@ -12,7 +12,6 @@
 #include "udpclient.h"
 #include "settingsfile.h"
 #include "console.h"
-#include "serialport.h"
 #include "mqttclient.h"
 #include "restclient.h"
 #include <VLCQtCore/Common.h>
@@ -40,8 +39,6 @@ public:
     ~MainWindow();
 
     void createMqttClient();
-    void AlwaysOpenSerialPort();
-
 
 private:
 
@@ -51,13 +48,11 @@ signals:
     void signalMqttPublic(QString message);
 
 private slots:
-    void onPrintSensorData(int idSensor, double lat, double lon, float temp, float hum, float dust);
     void on_pushButton_clicked();
     void onMqttConntected();
     void onMqttConnecting();
     void onMqttDisconnect();
     void onSubcribeTopic(bool result);
-    void checkSerialPort();
     void onMqttSubUpdateState(QString state);
     void onMqttSubMessage(QString message);
     void onMqttSubQos(quint8 qos);
@@ -82,10 +77,8 @@ private:
     restclient* restClient;
     udpclient* udpClient;
     QThread* thread_restclient;
-    QThread* thread_lora;
     QString _organizationName, _appname;
     bool transceiverStarted, sended, detectedFlag, loraStarted, subcribeSuccess = false;
-    serialport* lora;
     mqttclient* mqttClient;
     QString attributes;
     //vlc video
