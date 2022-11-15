@@ -245,7 +245,7 @@ void MainWindow::on_subButton_clicked()
 
 void MainWindow::on_get_video_forward_clicked()
 {
-    _media_forward = new VlcMedia("http://192.168.0.50:9000/", _instance);
+    _media_forward = new VlcMedia("http://192.168.0.101:9000/?action=stream", _instance);
     //reduce latency
     QStringList option_list;
            option_list.append(":network-caching=10");
@@ -261,7 +261,7 @@ void MainWindow::on_get_video_forward_clicked()
 
 void MainWindow::on_get_video_below_clicked()
 {
-    _media_below = new VlcMedia("http://192.168.0.50:8080/stream?topic=/main_camera/image_raw", _instance);
+    _media_below = new VlcMedia("http://192.168.0.101:8080/stream?topic=/main_camera/image_raw", _instance);
     //reduce latency
     QStringList option_list;
            option_list.append(":network-caching=100");
