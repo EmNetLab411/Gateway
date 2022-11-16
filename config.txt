@@ -32,5 +32,6 @@ TOPIC_GATEWAY_ATTRIBUTES:v1/gateway/attributes
 TOPIC_GATEWAY_ATTRIBUTES_REQUEST:v1/gateway/attributes/request
 TOPIC_GATEWAY_ATTRUBUTES_RESPONSE:v1/gateway/attributes/response
 TOPIC_GATEWAY_TELEMETRY:v1/gateway/telemetry
-ACCESS_TOKEN:TaVkcwYMDqS67EAsQI4j
+ACCESS_TOKEN:HfswJSpcZghgZIKiyA6l
+
 

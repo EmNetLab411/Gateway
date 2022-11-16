@@ -3,13 +3,16 @@
 udpclient::udpclient(QObject *parent) : QObject(parent)
 {
     socket = new QUdpSocket(this);
-    socket ->bind(QHostAddress::LocalHost, 54321);
-    connect(socket,&QUdpSocket::readyRead,this,&udpclient::handle_new_msg);
+//    socket ->bind(QHostAddress::LocalHost, 54321);
+
+    socket->connectToHost(QHostAddress("192.168.0.101") , 12345);
     QByteArray msg = "hello";
-    socket->writeDatagram(msg, QHostAddress::LocalHost,12345);
-    qDebug()<<"connect";
+    int ret = socket->writeDatagram(msg, QHostAddress("192.168.0.101"),12345);
+
+    qDebug()<<"connect status: "<<ret;
     timer = new QTimer(this);
     connect(timer,&QTimer::timeout,this,&udpclient::send_msg_manual_control);
+    connect(socket,&QUdpSocket::readyRead,this,&udpclient::handle_new_msg);
     timer->start(200);
 }
 
@@ -52,7 +55,7 @@ void udpclient::send_msg_manual_control()
         msg.setMessageId(UAVLINK_MSG_ID_MANUAL_CONTROL);
         msg.setLenPayLoad(UAVLINK_MSG_ID_MANUAL_CONTROL_LEN);
         msg.setPayLoad(manual_control_msg.ToPackage());
-        socket->writeDatagram(msg.Encode(),QHostAddress::LocalHost,12345);
+        socket->writeDatagram(msg.Encode(),QHostAddress("192.168.0.101"),12345);
     }
 }
 void udpclient::hold_manual_control_data(qint32 Vx, qint32 Vy, qint32 Vz, qint32 Yawrate, bool is_new)
@@ -70,7 +73,8 @@ void udpclient::send_msg_command(qint16 mode_id, float param1, float param2, flo
     msg.setMessageId(UAVLINK_MSG_ID_COMMAND);
     msg.setLenPayLoad(UAVLINK_MSG_ID_COMMAND_LEN);
     msg.setPayLoad(command_msg.ToPackage());
-    socket->writeDatagram(msg.Encode(),QHostAddress::LocalHost,12345);
+
+    socket->writeDatagram(msg.Encode(),QHostAddress("192.168.0.101"),12345);
 }
 void udpclient::send_msg_control_robot(qint32 Step1, qint32 Step2, qint32 Step3, qint32 Step4, qint32 Step5)
 {

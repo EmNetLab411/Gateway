@@ -32,7 +32,7 @@ restclient::restclient(QObject *parent) : QObject(parent)
 
     timer_manual_control = new QTimer(this);
     connect(timer_manual_control, &QTimer::timeout,this, &restclient::read_manual_control);
-    timer_manual_control->start(500);
+    timer_manual_control->start(1000);
 
 //    timer_control_robot = new QTimer(this);
 //    connect(timer_control_robot, &QTimer::timeout,this, &restclient::read_control_robot);
@@ -62,12 +62,13 @@ void restclient::read_control_robot()
 //handle message, command from GET result
 void restclient::handle_manual_control(QNetworkReply *reply)
 {
+//    qDebug()<<reply->readAll();
     QDateTime dt = QDateTime :: currentDateTime();
     QJsonDocument _manual_control_json = QJsonDocument::fromJson(reply->readAll());
     QJsonArray manual_control_json = _manual_control_json.array();
 //    QJsonDocument _control_robot_json = QJsonDocument::fromJson(reply->readAll());
 //    QJsonArray control_robot_json = _control_robot_json.array();
-    //qDebug()<<manual_control_json[0].toObject().value("lastUpdateTs").toVariant().toLongLong();
+//    qDebug()<<manual_control_json[5].toObject().value("lastUpdateTs").toVariant().toLongLong();
     // check timeout < 1s
     if (dt.toMSecsSinceEpoch() - manual_control_json[5].toObject().value("lastUpdateTs").toVariant().toLongLong() < 3000)
     {
@@ -78,10 +79,10 @@ void restclient::handle_manual_control(QNetworkReply *reply)
             else if (manual_control_json[i].toObject().value("key") == "Vz") Vz = manual_control_json[i].toObject().value("value").toInt();
             else if (manual_control_json[i].toObject().value("key") == "Yawrate") Yawrate = manual_control_json[i].toObject().value("value").toInt();
         }
-        qDebug()<<"manual control";
+        qDebug()<<"manual control Vz = "<<Vz;
         emit new_manual_control_received(Vx,Vy,Vz,Yawrate,true);
     }
-    else emit new_manual_control_received(Vx,Vy,Vz,Yawrate,false);
+//    else emit new_manual_control_received(Vx,Vy,Vz,Yawrate,false);
 
     if (dt.toMSecsSinceEpoch() - manual_control_json[0].toObject().value("lastUpdateTs").toVariant().toLongLong() < 3000)
     {
@@ -93,7 +94,7 @@ void restclient::handle_manual_control(QNetworkReply *reply)
             else if (manual_control_json[i].toObject().value("key") == "Step4") Step4 = manual_control_json[i].toObject().value("value").toInt();
             else if (manual_control_json[i].toObject().value("key") == "Step5") Step5 = manual_control_json[i].toObject().value("value").toInt();
         }
-        qDebug()<<"rbot control";
+        qDebug()<<"robot control";
         emit new_control_robot_received(Step1,Step2,Step3,Step4,Step5);
     }
 

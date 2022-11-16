@@ -33,6 +33,7 @@ int uavlink_msg_state_t::getArmed()
 
 int uavlink_msg_state_t::getMode()
 {
+    qDebug()<<_mode;
     return _mode;
 }
 

@@ -7,7 +7,8 @@ mqttclient::mqttclient(QObject *parent, QString hostName, qint16 port) : QObject
     m_client->setHostname(hostName);
     m_client->setPort(port);
     qDebug()<<hostName<<port;
-    m_client->setUsername("c9Q9xAXBosjcysnDy6C3");
+    m_client->setUsername("10tu271fS7bFTJr5jgvK");
+
 
     connect(m_client, &QMqttClient::stateChanged, this, &mqttclient::updateLogStateChange);
     connect(m_client, &QMqttClient::disconnected, this, &mqttclient::brokerDisconnected);

@@ -5,7 +5,7 @@
 #include <QByteRef>
 #include <QByteArray>
 #include <QDataStream>
-
+#include <QDebug>
 class uavlink_msg_state_t : public QObject
 {
     Q_OBJECT
