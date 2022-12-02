@@ -1,6 +1,6 @@
 #ifndef RESTCLIENT_H
 #define RESTCLIENT_H
-
+#include <QObject>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QTimer>
@@ -22,14 +22,17 @@ public:
     QTimer *timer_manual_control;
     QTimer *timer_control_robot;
     QTimer *timer_command;
+    QTimer *timer_waypoint;
 private:
-    QByteArray command_request_url, manual_control_request_url, waypoint_request_url, control_robot_request_url;
-    QByteArray command_key, manual_control_key, waypoint_key, control_robot_key;
+    QByteArray command_request_url, manual_control_request_url, waypoint_request_url, control_robot_request_url, msg_waypoint_request_url;
+    QByteArray command_key, manual_control_key, waypoint_key, control_robot_key, msg_waypoint_key;
     int lastest_command_id;
     int Vx, Vy, Vz, Yawrate;
     int Step1, Step2, Step3, Step4, Step5;
     qint16 mode_id;
     float param1, param2, param3, param4;
+    int wpid;
+    float lat,lon,alt;
     QByteArray *command;
     QTime *time_now;
     QNetworkAccessManager *command_receiver;
@@ -49,6 +52,7 @@ private slots:
     void read_command();
     void read_manual_control();
     void read_control_robot();
+    void read_waypoint();
     void handle_command(QNetworkReply *reply);
     void handle_manual_control(QNetworkReply *reply);
     void handle_waypoint(QNetworkReply *reply);

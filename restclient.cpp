@@ -9,26 +9,30 @@ restclient::restclient(QObject *parent) : QObject(parent)
     command_key = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0cmFpbmluZy5sYWI0MTFAZ21haWwuY29tIiwidXNlcklkIjoiN2FhZTNmMTAtMjE5Yi0xMWVjLWI0YTUtY2ZiMjg5YWYzOGQ5Iiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJpc3MiOiJ0aGluZ3Nib2FyZC5pbyIsImlhdCI6MTY2NzkyMjA0NywiZXhwIjoxNjY5NzIyMDQ3LCJmaXJzdE5hbWUiOiI0MTEiLCJsYXN0TmFtZSI6ImxhYiIsImVuYWJsZWQiOnRydWUsInByaXZhY3lQb2xpY3lBY2NlcHRlZCI6dHJ1ZSwiaXNQdWJsaWMiOmZhbHNlLCJ0ZW5hbnRJZCI6IjdhMjU2MDAwLTIxOWItMTFlYy1iNGE1LWNmYjI4OWFmMzhkOSIsImN1c3RvbWVySWQiOiIxMzgxNDAwMC0xZGQyLTExYjItODA4MC04MDgwODA4MDgwODAifQ.4OvoCbDGGW6a7_9z88Rk63JRWw9j81BWKxvcSUVGBymFDa566C6jg828tVq-3OzbAgHOIU3D4YNUJEpmUEXjcw";
     control_robot_request_url ="https://demo.thingsboard.io:443/api/plugins/telemetry/DEVICE/a9d6c750-4fba-11ed-a339-0708081d40ce/values/attributes/CLIENT_SCOPE";
     control_robot_key = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0cmFpbmluZy5sYWI0MTFAZ21haWwuY29tIiwidXNlcklkIjoiN2FhZTNmMTAtMjE5Yi0xMWVjLWI0YTUtY2ZiMjg5YWYzOGQ5Iiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJpc3MiOiJ0aGluZ3Nib2FyZC5pbyIsImlhdCI6MTY2NjE1MDY2OCwiZXhwIjoxNjY3OTUwNjY4LCJmaXJzdE5hbWUiOiI0MTEiLCJsYXN0TmFtZSI6ImxhYiIsImVuYWJsZWQiOnRydWUsInByaXZhY3lQb2xpY3lBY2NlcHRlZCI6dHJ1ZSwiaXNQdWJsaWMiOmZhbHNlLCJ0ZW5hbnRJZCI6IjdhMjU2MDAwLTIxOWItMTFlYy1iNGE1LWNmYjI4OWFmMzhkOSIsImN1c3RvbWVySWQiOiIxMzgxNDAwMC0xZGQyLTExYjItODA4MC04MDgwODA4MDgwODAifQ.aVDqJ4D5oGrUVd15jBrotdO1dXfH3Z5EMwVx4EDn79lMAFQJ_DTXLABLuGrC5rOifya7o6vVTzV_YNdC06HYAQ";
+    msg_waypoint_request_url ="https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/1665de30-7223-11ed-81cb-3bc720ab387f/values/attributes/CLIENT_SCOPE";
+    msg_waypoint_key = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJraWVuY2F0ZUBnbWFpbC5jb20iLCJ1c2VySWQiOiI5YjEzOWEzMC03MjFiLTExZWQtYTNlOC1jZDk1M2Q5MDNlNzYiLCJzY29wZXMiOlsiVEVOQU5UX0FETUlOIl0sImlzcyI6InRoaW5nc2JvYXJkLmNsb3VkIiwiaWF0IjoxNjY5OTY5ODg2LCJleHAiOjE2Njk5OTg2ODYsImZpcnN0TmFtZSI6ImtpZW4iLCJsYXN0TmFtZSI6Ii1jYXRlIiwiZW5hYmxlZCI6dHJ1ZSwiaXNQdWJsaWMiOmZhbHNlLCJpc0JpbGxpbmdTZXJ2aWNlIjpmYWxzZSwicHJpdmFjeVBvbGljeUFjY2VwdGVkIjp0cnVlLCJ0ZXJtc09mVXNlQWNjZXB0ZWQiOnRydWUsInRlbmFudElkIjoiOWEyMDEyNzAtNzIxYi0xMWVkLWEzZTgtY2Q5NTNkOTAzZTc2IiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCJ9.e7GepbiQFt_bSTlsbTCaxgrDaHKiF3FgZZNxKZkOweXnaNk_02Xdc4jCAoOfysb46J4yD8CjrnojT8QAaAba_g";
+
     time_now = new QTime();
 
     command_receiver = new QNetworkAccessManager(this);
     manual_control_receiver = new QNetworkAccessManager(this);
     control_robot_receiver = new QNetworkAccessManager(this);
+    waypoint_receiver = new QNetworkAccessManager(this);
 
     command_request.setUrl(QUrl(command_request_url));
     manual_control_request.setUrl(QUrl(manual_control_request_url));
     control_robot_request.setUrl(QUrl(control_robot_request_url));
-
+    waypoint_request.setUrl(QUrl(msg_waypoint_request_url));
 
     command_request.setRawHeader("X-Authorization",command_key);
-
     manual_control_request.setRawHeader("X-Authorization", manual_control_key);
-
     control_robot_request.setRawHeader("X-Authorization",control_robot_key);
+    waypoint_request.setRawHeader("X-Authorization",msg_waypoint_key);
 
     connect(command_receiver, &QNetworkAccessManager::finished, this, &restclient::handle_command);
     connect(manual_control_receiver, &QNetworkAccessManager::finished,this,&restclient::handle_manual_control);
     connect(control_robot_receiver, &QNetworkAccessManager::finished,this,&restclient::handle_control_robot);
+    connect(waypoint_receiver, &QNetworkAccessManager::finished,this,&restclient::handle_waypoint);
 
     timer_manual_control = new QTimer(this);
     connect(timer_manual_control, &QTimer::timeout,this, &restclient::read_manual_control);
@@ -42,11 +46,19 @@ restclient::restclient(QObject *parent) : QObject(parent)
     connect(timer_command, &QTimer::timeout,this, &restclient::read_command);
     timer_command->start(2000);
 
+    timer_waypoint = new QTimer(this);
+    connect(timer_waypoint, &QTimer::timeout,this, &restclient::read_waypoint);
+    timer_waypoint->start(100);
+
 }
 
 
 
 //read message, command using GET method
+void restclient::read_waypoint()
+{
+    waypoint_receiver->get(waypoint_request);
+}
 void restclient::read_command()
 {
     command_receiver->get(command_request);
@@ -62,14 +74,9 @@ void restclient::read_control_robot()
 //handle message, command from GET result
 void restclient::handle_manual_control(QNetworkReply *reply)
 {
-//    qDebug()<<reply->readAll();
     QDateTime dt = QDateTime :: currentDateTime();
     QJsonDocument _manual_control_json = QJsonDocument::fromJson(reply->readAll());
     QJsonArray manual_control_json = _manual_control_json.array();
-//    QJsonDocument _control_robot_json = QJsonDocument::fromJson(reply->readAll());
-//    QJsonArray control_robot_json = _control_robot_json.array();
-//    qDebug()<<manual_control_json[5].toObject().value("lastUpdateTs").toVariant().toLongLong();
-    // check timeout < 1s
     if (dt.toMSecsSinceEpoch() - manual_control_json[5].toObject().value("lastUpdateTs").toVariant().toLongLong() < 3000)
     {
         for(int i=0; i< manual_control_json.count(); i++)
@@ -132,7 +139,29 @@ void restclient::handle_command(QNetworkReply *reply)
 }
 void restclient::handle_waypoint(QNetworkReply *reply)
 {
-//    qDebug()<< reply->readAll();
+        qDebug()<<reply->readAll();
+        QDateTime dt = QDateTime :: currentDateTime();
+        QJsonDocument _waypoint_json = QJsonDocument::fromJson(reply->readAll());
+        QJsonArray waypoint_json = _waypoint_json.array();
+
+//        int command_id = waypoint_json[3].toObject().value("value").toInt();
+//        qDebug()<<command_id;
+//        if (dt.toMSecsSinceEpoch() - command_json[1].toObject().value("lastUpdateTs").toVariant().toLongLong() < 3000 && (command_id > lastest_command_id || command_id==0))
+//        {
+//            qDebug()<<command_id;
+//        // check time delay < 1s
+            for(int i=0; i< waypoint_json.count(); i++)
+            {
+                if (waypoint_json[i].toObject().value("key") == "wpid") wpid = waypoint_json[i].toObject().value("value").toInt();
+                else if (waypoint_json[i].toObject().value("key") == "altitude") alt = waypoint_json[i].toObject().value("value").toDouble();
+                else if (waypoint_json[i].toObject().value("key") == "latititude") lat = waypoint_json[i].toObject().value("value").toDouble();
+                else if (waypoint_json[i].toObject().value("key") == "longitude") lon = waypoint_json[i].toObject().value("value").toDouble();
+            }
+    //        uavlink_msg_command_t test(mode_id,param1,param2,param3,param4);
+    //        qDebug()<<test.ToPackage();
+            qDebug()<< wpid << alt << lat << lon;
+//            emit new_command_received(mode_id,param1,param2,param3,param4);
+//        }
 }
 void restclient::handle_control_robot(QNetworkReply *reply)
 {

@@ -40,7 +40,7 @@ void udpclient::handle_new_msg()
                     emit new_msg_sensor_received(uavlink_msg.getPayLoad());
                     break;
                 default:
-                    qDebug()<<"unknown uavlink message id";
+                    qDebug()<<"UDP client: unknown uavlink message id";
             }
         }
 }
