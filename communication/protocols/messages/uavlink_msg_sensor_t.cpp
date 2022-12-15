@@ -39,6 +39,15 @@ double uavlink_msg_sensor_t::getLon()
     return ((double) _lon) / 10000000.0f;
 }
 
+float uavlink_msg_sensor_t::getTDS()
+{
+    return _tds / 100.0f;
+}
+
+float uavlink_msg_sensor_t::getPH()
+{
+    return _ph / 100.0f;
+}
 
 void uavlink_msg_sensor_t::Decode(QByteArray data)
 {
@@ -51,8 +60,8 @@ void uavlink_msg_sensor_t::Decode(QByteArray data)
     test >> _temp;
     test >> _hum;
     test >> _gas;
-
-
+    test >> _tds;
+    test >> _ph;
 }
 
 

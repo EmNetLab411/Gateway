@@ -46,7 +46,7 @@ private:
 signals:
     void new_command_received(qint16 id, float param1, float param2, float param3, float param4);
     void new_manual_control_received(qint16 vx, qint16 vy, qint16 vz, qint16 yawrate,bool is_new);
-    void new_waypoint_received(qint16 waypointId, qint32 lat, qint32 lon, qint32 alt);
+    void new_waypoint_received(qint32 waypointId, qint32 lat, qint32 lon, qint32 alt);
     void new_control_robot_received(quint32 step1, quint32 step2, quint32 step3, quint32 step4, quint32 step5);
 private slots:
     void read_command();

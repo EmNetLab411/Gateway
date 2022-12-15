@@ -24,7 +24,7 @@ private:
     qint8 _connected;
     qint8 _armed;
     qint8 _mode;
-    qint8 _batterty;
+    qint8 _battery;
 
 };
 

@@ -69,6 +69,11 @@ private slots:
 
     void on_get_video_below_clicked();
 
+    void hold_manual_control_data(qint32 Vx, qint32 Vy, qint32 Vz, qint32 Yawrate, bool is_new);
+    void send_msg_command(qint16 mode_id, float param1, float param2, float param3, float param4);
+    void send_msg_control_robot(qint32 Step1, qint32 Step2, qint32 Step3, qint32 Step4, qint32 Step5);
+    void send_msg_waypoint(qint32 waypointId, qint32 lat, qint32 lon, qint32 alt);
+
 public:
     settingsfile* config;
 private:

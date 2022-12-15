@@ -87,6 +87,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(restClient, &restclient::new_manual_control_received,udpClient,&udpclient::hold_manual_control_data);
     connect(restClient, &restclient::new_command_received,udpClient,&udpclient::send_msg_command);
     connect(restClient, &restclient::new_control_robot_received,udpClient,&udpclient::send_msg_control_robot);
+    connect(restClient, &restclient::new_waypoint_received, udpClient, &udpclient::send_msg_waypoint);
 }
 void MainWindow::testfunct(QNetworkReply *reply)
 {

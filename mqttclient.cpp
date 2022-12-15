@@ -7,7 +7,7 @@ mqttclient::mqttclient(QObject *parent, QString hostName, qint16 port) : QObject
     m_client->setHostname(hostName);
     m_client->setPort(port);
     qDebug()<<hostName<<port;
-    m_client->setUsername("10tu271fS7bFTJr5jgvK");
+    m_client->setUsername("BqhCLP5b9pJqmP2mjo5z");
 
 
     connect(m_client, &QMqttClient::stateChanged, this, &mqttclient::updateLogStateChange);
@@ -110,7 +110,7 @@ void mqttclient::publishDataSensor(QByteArray msg)
    uavlink_msg_sensor_t sensor;
    sensor.Decode(msg);
    QJsonObject msg_sensor = {{"SensorID",sensor.getSensorID()}, {"Latitude",sensor.getLat()}, {"Longitude",sensor.getLon()},
-                            {"Temperature",sensor.getTemp()}, {"Huminity",sensor.getHum()}, {"Gas",sensor.getGas()}};
+                            {"Temperature",sensor.getTemp()}, {"Huminity",sensor.getHum()}, {"Gas",sensor.getGas()}, {"TDS",sensor.getTDS()}, {"pH",sensor.getPH()}};
    QJsonObject msg_mqtt = {{"Sensor", QJsonValue(msg_sensor)}};
    QJsonDocument msg_mqtt_doc;
    msg_mqtt_doc.setObject(msg_mqtt);
@@ -126,6 +126,7 @@ void mqttclient::publishDataState(QByteArray msg)
     QJsonObject msg_mqtt = {{"State",QJsonValue(msg_state)}};
     QJsonDocument msg_mqtt_doc;
     msg_mqtt_doc.setObject(msg_mqtt);
+//    qDebug()<<"mqtt client"<<msg_mqtt;
     _topic = config->topic_gateway_attribute;
     m_client->publish(_topic, msg_mqtt_doc.toJson());
 }
@@ -139,6 +140,7 @@ void mqttclient::publishDataGlobalPosition(QByteArray msg)
     QJsonObject msg_mqtt = {{"Global Position",QJsonValue(msg_global_position)}};
     QJsonDocument msg_mqtt_doc;
     msg_mqtt_doc.setObject(msg_mqtt);
+//    qDebug()<<"mqtt client"<<msg_mqtt;
     _topic = config->topic_gateway_attribute;
     m_client->publish(_topic, msg_mqtt_doc.toJson());
 }

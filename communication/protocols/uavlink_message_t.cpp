@@ -38,8 +38,8 @@ QByteArray uavlink_message_t::getPayLoad()
 QByteArray uavlink_message_t::Encode()
 {
     QByteArray data;
-    data[0] = (qint8)_msgID;
-    data[1] = (qint8)_lenPayload;
+    data.append((qint8)_msgID);
+    data.append((qint8)_lenPayload);
     data.append(_payload);
     return data;
 }

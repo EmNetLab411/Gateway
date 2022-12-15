@@ -12,13 +12,14 @@ uavlink_msg_state_t::~uavlink_msg_state_t()
 
 void uavlink_msg_state_t::Decode(QByteArray data)
 {
+
     QDataStream test(data);
     test.setByteOrder(QDataStream::LittleEndian);
 
     test >> _connected;
     test >> _armed;
     test >> _mode;
-    test >> _batterty;
+    test >> _battery;
 }
 
 int uavlink_msg_state_t::getConnected()
@@ -38,5 +39,5 @@ int uavlink_msg_state_t::getMode()
 
 int uavlink_msg_state_t::getBattery()
 {
-    return _batterty;
+    return _battery;
 }

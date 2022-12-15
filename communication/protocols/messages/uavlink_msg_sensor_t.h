@@ -18,6 +18,8 @@ public:
     float getGas();
     double getLat();
     double getLon();
+    float getTDS();
+    float getPH();
     QByteArray getData();
     void Decode(QByteArray data);
 
@@ -30,6 +32,8 @@ private:
     qint16 _temp;
     qint16 _hum;
     qint16 _gas;
+    qint16 _tds;
+    qint16 _ph;
 
 };
 
