@@ -12,6 +12,7 @@
 #include <QThread>
 #include "communication/protocols/messages/uavlink_msg_manual_control_t.h"
 #include "communication/protocols/messages/uavlink_msg_command_t.h"
+#include "settingsfile.h"
 
 class restclient : public QObject
 {
@@ -23,7 +24,9 @@ public:
     QTimer *timer_control_robot;
     QTimer *timer_command;
     QTimer *timer_waypoint;
+    QTimer *timer_request_key;
 private:
+    settingsfile* config;
     QByteArray command_request_url, manual_control_request_url, waypoint_request_url, control_robot_request_url, msg_waypoint_request_url;
     QByteArray command_key, manual_control_key, waypoint_key, control_robot_key, msg_waypoint_key;
     int lastest_command_id;
@@ -39,6 +42,9 @@ private:
     QNetworkAccessManager *manual_control_receiver;
     QNetworkAccessManager *waypoint_receiver;
     QNetworkAccessManager *control_robot_receiver;
+    QNetworkAccessManager *get_key_swagger;
+
+    QNetworkRequest key_swagger_request;
     QNetworkRequest command_request;
     QNetworkRequest manual_control_request;
     QNetworkRequest waypoint_request;
@@ -48,15 +54,19 @@ signals:
     void new_manual_control_received(qint16 vx, qint16 vy, qint16 vz, qint16 yawrate,bool is_new);
     void new_waypoint_received(qint32 waypointId, qint32 lat, qint32 lon, qint32 alt);
     void new_control_robot_received(quint32 step1, quint32 step2, quint32 step3, quint32 step4, quint32 step5);
+    void print_data(QString text);
 private slots:
     void read_command();
     void read_manual_control();
     void read_control_robot();
     void read_waypoint();
+    void read_key();
     void handle_command(QNetworkReply *reply);
     void handle_manual_control(QNetworkReply *reply);
     void handle_waypoint(QNetworkReply *reply);
     void handle_control_robot(QNetworkReply *reply);
+    void handle_new_key(QNetworkReply *reply);
+
 
 };
 

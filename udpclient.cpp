@@ -22,6 +22,7 @@ udpclient::~udpclient()
 //message from  UAV to thingsboard
 void udpclient::handle_new_msg()
 {
+    emit uav_connected();
 
     while (socket->hasPendingDatagrams()) {
             QNetworkDatagram data = socket->receiveDatagram();

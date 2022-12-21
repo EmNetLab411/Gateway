@@ -28,6 +28,7 @@ signals:
     void new_msg_state_received(QByteArray msg);
     void new_msg_global_position_received(QByteArray msg);
     void new_msg_sensor_received(QByteArray msg);
+    void uav_connected();
 public slots:
     void handle_new_msg();
     void hold_manual_control_data(qint32 Vx, qint32 Vy, qint32 Vz, qint32 Yawrate, bool is_new);

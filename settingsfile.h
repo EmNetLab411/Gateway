@@ -43,7 +43,8 @@ enum DataType
     TOPIC_GATEWAY_ATTRIBUTES_REQUEST,
     TOPIC_GATEWAY_ATTRUBUTES_RESPONSE,
     TOPIC_GATEWAY_TELEMETRY,
-    ACCESS_TOKEN
+    ACCESS_TOKEN,
+    KEY_SWAGGER
 
 
 };
@@ -80,6 +81,7 @@ public:
     QString topic_gateway_attribute_response;
     QString topic_gateway_telemetry;
     QString ACCESS_TOKEN_H;
+    QString key_swagger;
 
     std::map<QString, DataType> s_mapStringValues;
 

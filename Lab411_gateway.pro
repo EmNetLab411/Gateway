@@ -28,7 +28,6 @@ SOURCES += \
     udpclient.cpp
 
 HEADERS += \
-    communication/messages/messageID.h \
     communication/protocols/messages/messageID.h \
     communication/protocols/messages/uavlink_msg_command_t.h \
     communication/protocols/messages/uavlink_msg_control_robot_t.h \
@@ -61,3 +60,6 @@ include(3rdParty/qextserialport/src/qextserialport.pri)
 LIBS       += -lVLCQtCore -lVLCQtWidgets
 RESOURCES += \
     applicationResource.qrc
+
+DISTFILES += \
+    rest_api_tb.py

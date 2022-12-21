@@ -2,15 +2,19 @@
 
 restclient::restclient(QObject *parent) : QObject(parent)
 {
+
+    config = new settingsfile();
+    get_key_swagger = new QNetworkAccessManager(this);
+
+    key_swagger_request.setUrl(QUrl("https://thingsboard.cloud:443/api/auth/login"));
+    key_swagger_request.setRawHeader("accept", "application/json");
+    key_swagger_request.setRawHeader("Content-Type", "application/json");
+
     lastest_command_id = -1;
     manual_control_request_url = "https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/f27036d0-7441-11ed-8b62-e9eba22b9df6/values/attributes/CLIENT_SCOPE";
-    manual_control_key = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYWI0MTEudHJhaW5pbmdAZ21haWwuY29tIiwidXNlcklkIjoiM2VjMWNhNTAtNzQ0MC0xMWVkLWIyNGMtYWI0MDgyNmM2ODliIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJpc3MiOiJ0aGluZ3Nib2FyZC5jbG91ZCIsImlhdCI6MTY3MDgxNjA5NSwiZXhwIjoxNjcwODQ0ODk1LCJmaXJzdE5hbWUiOiJUcmFpbmluZyIsImxhc3ROYW1lIjoiTGFiNDExIiwiZW5hYmxlZCI6dHJ1ZSwiaXNQdWJsaWMiOmZhbHNlLCJpc0JpbGxpbmdTZXJ2aWNlIjpmYWxzZSwicHJpdmFjeVBvbGljeUFjY2VwdGVkIjp0cnVlLCJ0ZXJtc09mVXNlQWNjZXB0ZWQiOnRydWUsInRlbmFudElkIjoiM2RiZWQ5NDAtNzQ0MC0xMWVkLWIyNGMtYWI0MDgyNmM2ODliIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCJ9.kJlOj_ox0SH72bbe-nGWBQApmeirDR37gDjyqQo-wML06PV2l_hM4U09qUj1bFNBdlpwntHNtzoft4AzF5OcCg";
     command_request_url = "https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/2a4fcd90-7442-11ed-b24c-ab40826c689b/values/attributes/CLIENT_SCOPE";
-    command_key = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYWI0MTEudHJhaW5pbmdAZ21haWwuY29tIiwidXNlcklkIjoiM2VjMWNhNTAtNzQ0MC0xMWVkLWIyNGMtYWI0MDgyNmM2ODliIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJpc3MiOiJ0aGluZ3Nib2FyZC5jbG91ZCIsImlhdCI6MTY3MDgxNjA5NSwiZXhwIjoxNjcwODQ0ODk1LCJmaXJzdE5hbWUiOiJUcmFpbmluZyIsImxhc3ROYW1lIjoiTGFiNDExIiwiZW5hYmxlZCI6dHJ1ZSwiaXNQdWJsaWMiOmZhbHNlLCJpc0JpbGxpbmdTZXJ2aWNlIjpmYWxzZSwicHJpdmFjeVBvbGljeUFjY2VwdGVkIjp0cnVlLCJ0ZXJtc09mVXNlQWNjZXB0ZWQiOnRydWUsInRlbmFudElkIjoiM2RiZWQ5NDAtNzQ0MC0xMWVkLWIyNGMtYWI0MDgyNmM2ODliIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCJ9.kJlOj_ox0SH72bbe-nGWBQApmeirDR37gDjyqQo-wML06PV2l_hM4U09qUj1bFNBdlpwntHNtzoft4AzF5OcCg";
     control_robot_request_url ="https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/09540c00-7442-11ed-861d-25ac767dd88b/values/attributes/CLIENT_SCOPE";
-    control_robot_key = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYWI0MTEudHJhaW5pbmdAZ21haWwuY29tIiwidXNlcklkIjoiM2VjMWNhNTAtNzQ0MC0xMWVkLWIyNGMtYWI0MDgyNmM2ODliIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJpc3MiOiJ0aGluZ3Nib2FyZC5jbG91ZCIsImlhdCI6MTY3MDgxNjA5NSwiZXhwIjoxNjcwODQ0ODk1LCJmaXJzdE5hbWUiOiJUcmFpbmluZyIsImxhc3ROYW1lIjoiTGFiNDExIiwiZW5hYmxlZCI6dHJ1ZSwiaXNQdWJsaWMiOmZhbHNlLCJpc0JpbGxpbmdTZXJ2aWNlIjpmYWxzZSwicHJpdmFjeVBvbGljeUFjY2VwdGVkIjp0cnVlLCJ0ZXJtc09mVXNlQWNjZXB0ZWQiOnRydWUsInRlbmFudElkIjoiM2RiZWQ5NDAtNzQ0MC0xMWVkLWIyNGMtYWI0MDgyNmM2ODliIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCJ9.kJlOj_ox0SH72bbe-nGWBQApmeirDR37gDjyqQo-wML06PV2l_hM4U09qUj1bFNBdlpwntHNtzoft4AzF5OcCg";
     msg_waypoint_request_url ="https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/524635f0-7442-11ed-a3e8-cd953d903e76/values/attributes/CLIENT_SCOPE";
-    msg_waypoint_key = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJsYWI0MTEudHJhaW5pbmdAZ21haWwuY29tIiwidXNlcklkIjoiM2VjMWNhNTAtNzQ0MC0xMWVkLWIyNGMtYWI0MDgyNmM2ODliIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJpc3MiOiJ0aGluZ3Nib2FyZC5jbG91ZCIsImlhdCI6MTY3MDgxNjA5NSwiZXhwIjoxNjcwODQ0ODk1LCJmaXJzdE5hbWUiOiJUcmFpbmluZyIsImxhc3ROYW1lIjoiTGFiNDExIiwiZW5hYmxlZCI6dHJ1ZSwiaXNQdWJsaWMiOmZhbHNlLCJpc0JpbGxpbmdTZXJ2aWNlIjpmYWxzZSwicHJpdmFjeVBvbGljeUFjY2VwdGVkIjp0cnVlLCJ0ZXJtc09mVXNlQWNjZXB0ZWQiOnRydWUsInRlbmFudElkIjoiM2RiZWQ5NDAtNzQ0MC0xMWVkLWIyNGMtYWI0MDgyNmM2ODliIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCJ9.kJlOj_ox0SH72bbe-nGWBQApmeirDR37gDjyqQo-wML06PV2l_hM4U09qUj1bFNBdlpwntHNtzoft4AzF5OcCg";
 
     time_now = new QTime();
 
@@ -24,15 +28,20 @@ restclient::restclient(QObject *parent) : QObject(parent)
     control_robot_request.setUrl(QUrl(control_robot_request_url));
     waypoint_request.setUrl(QUrl(msg_waypoint_request_url));
 
-    command_request.setRawHeader("X-Authorization",command_key);
-    manual_control_request.setRawHeader("X-Authorization", manual_control_key);
-    control_robot_request.setRawHeader("X-Authorization",control_robot_key);
-    waypoint_request.setRawHeader("X-Authorization",msg_waypoint_key);
+//    command_request.setRawHeader("X-Authorization",command_key);
+//    manual_control_request.setRawHeader("X-Authorization", manual_control_key);
+//    control_robot_request.setRawHeader("X-Authorization",control_robot_key);
+//    waypoint_request.setRawHeader("X-Authorization",msg_waypoint_key);
 
     connect(command_receiver, &QNetworkAccessManager::finished, this, &restclient::handle_command);
     connect(manual_control_receiver, &QNetworkAccessManager::finished,this,&restclient::handle_manual_control);
     connect(control_robot_receiver, &QNetworkAccessManager::finished,this,&restclient::handle_control_robot);
     connect(waypoint_receiver, &QNetworkAccessManager::finished,this,&restclient::handle_waypoint);
+    connect(get_key_swagger, &QNetworkAccessManager::finished, this, &restclient::handle_new_key);
+
+//    timer_request_key = new QTimer(this);
+//    connect(timer_request_key, &QTimer::timeout, this, &restclient::read_key);
+//    timer_request_key->start(10000);
 
    timer_manual_control = new QTimer(this);
    connect(timer_manual_control, &QTimer::timeout,this, &restclient::read_manual_control);
@@ -50,11 +59,20 @@ restclient::restclient(QObject *parent) : QObject(parent)
      connect(timer_waypoint, &QTimer::timeout,this, &restclient::read_waypoint);
      timer_waypoint->start(1000);
 
+     QByteArray message_request_key = QString("{\"username\":\"lab411.training@gmail.com\" , \"password\":\"ktttlab411\"}").toUtf8();
+     get_key_swagger->post(key_swagger_request,message_request_key);
+
+
 }
 
 
 
 //read message, command using GET method
+void restclient::read_key()
+{
+    QByteArray message_request_key = QString("{\"username\":\"lab411.training@gmail.com\" , \"password\":\"ktttlab411\"}").toUtf8();
+    get_key_swagger->post(key_swagger_request,message_request_key);
+}
 void restclient::read_waypoint()
 {
     waypoint_receiver->get(waypoint_request);
@@ -70,6 +88,24 @@ void restclient::read_manual_control()
 void restclient::read_control_robot()
 {
     control_robot_receiver->get(control_robot_request);
+}
+
+//read swagger key
+void restclient::handle_new_key(QNetworkReply *reply)
+{
+//    qDebug()<<reply->readAll();
+    QJsonDocument _key_json = QJsonDocument::fromJson(reply->readAll());
+    QJsonArray key_json = _key_json.array();
+    QString key_swagger = _key_json.object().value("token").toString();
+    manual_control_key = "Bearer "+key_swagger.toUtf8();
+    command_key = "Bearer "+key_swagger.toUtf8();
+    control_robot_key = "Bearer "+key_swagger.toUtf8();
+    msg_waypoint_key = "Bearer "+key_swagger.toUtf8();
+    command_request.setRawHeader("X-Authorization",command_key);
+    manual_control_request.setRawHeader("X-Authorization", manual_control_key);
+    control_robot_request.setRawHeader("X-Authorization",control_robot_key);
+    waypoint_request.setRawHeader("X-Authorization",msg_waypoint_key);
+
 }
 //handle message, command from GET result
 void restclient::handle_manual_control(QNetworkReply *reply)
@@ -88,8 +124,13 @@ void restclient::handle_manual_control(QNetworkReply *reply)
             else if (manual_control_json[i].toObject().value("key") == "Yawrate") Yawrate = manual_control_json[i].toObject().value("value").toInt();
         }
         emit new_manual_control_received(Vx,Vy,Vz,Yawrate,true);
+        qDebug()<<"rest client: manual control";
     }
-    else emit new_manual_control_received(Vx,Vy,Vz,Yawrate,false);
+    else
+    {
+        emit new_manual_control_received(Vx,Vy,Vz,Yawrate,false);
+        qDebug()<<"rest client: stop manual control";
+    }
 
 
 
@@ -102,12 +143,10 @@ void restclient::handle_command(QNetworkReply *reply)
     QDateTime dt = QDateTime :: currentDateTime();
     QJsonDocument _command_json = QJsonDocument::fromJson(reply->readAll());
     QJsonArray command_json = _command_json.array();
-//    qDebug()<<"time command"<<command_json[0].toObject().value("lastUpdateTs").toVariant().toLongLong();
     int command_id = command_json[0].toObject().value("value").toInt();
     if (dt.toMSecsSinceEpoch() - command_json[0].toObject().value("lastUpdateTs").toVariant().toLongLong() < 3000 && (command_id > lastest_command_id || command_id==0))
     {
-//        qDebug()<<command_id;
-    // check time delay < 1s
+        qDebug()<<"rest client: new command"<<command_id;
         for(int i=0; i< command_json.count(); i++)
         {
             if (command_json[i].toObject().value("key") == "id") lastest_command_id = command_json[i].toObject().value("value").toInt();
@@ -118,9 +157,8 @@ void restclient::handle_command(QNetworkReply *reply)
             else if (command_json[i].toObject().value("key") == "mode_id") mode_id = command_json[i].toObject().value("value").toInt();
 
         }
-//        uavlink_msg_command_t test(mode_id,param1,param2,param3,param4);
-//        qDebug()<<test.ToPackage();
         emit new_command_received(mode_id,param1,param2,param3,param4);
+        emit print_data("new command received: ");
     }
 
 }
@@ -132,6 +170,7 @@ void restclient::handle_waypoint(QNetworkReply *reply)
     QJsonArray waypoint_json = _waypoint_json.array();
     if (dt.toMSecsSinceEpoch() - waypoint_json[0].toObject().value("lastUpdateTs").toVariant().toLongLong() < 3000)
     {
+
         for(int i=0; i< waypoint_json.count(); i++)
         {
             if (waypoint_json[i].toObject().value("key") == "wpid") wpid = waypoint_json[i].toObject().value("value").toInt();
@@ -139,7 +178,7 @@ void restclient::handle_waypoint(QNetworkReply *reply)
             else if (waypoint_json[i].toObject().value("key") == "latitude") lat = (float)waypoint_json[i].toObject().value("value").toInt();
             else if (waypoint_json[i].toObject().value("key") == "longitude") lon = waypoint_json[i].toObject().value("value").toInt();
         }
-        qDebug()<< wpid << lat << lon << alt;
+        qDebug()<<"rest client: new waypoint id";
         emit new_waypoint_received(wpid,lat,lon,alt);
     }
 }

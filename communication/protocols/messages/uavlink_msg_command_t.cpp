@@ -20,6 +20,6 @@ QByteArray uavlink_msg_command_t::ToPackage()
     stream << _Param2;
     stream << _Param2;
     stream << _Param4;
-    qDebug() << data.length();
+//    qDebug() << data.length();
     return data;
 }

@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->labelConnected->setStyleSheet("QLabel { background-color : red; color : black; qproperty-alignment: AlignCenter; font: bold; border-color: rgb(255,255,255); border-width: 2px; border-style: solid; border-radius: 9px; padding: 5px;}");
     ui->labelConnected->setText("MQTT Status: Disconnected");
-    ui->labelSerialPort->setStyleSheet("QLabel { background-color : red; color : black; qproperty-alignment: AlignCenter; font: bold; border-color: rgb(255,255,255); border-width: 2px; border-style: solid; border-radius: 9px; padding: 5px;}");
+//    ui->labelSerialPort->setStyleSheet("QLabel { background-color : red; color : black; qproperty-alignment: AlignCenter; font: bold; border-color: rgb(255,255,255); border-width: 2px; border-style: solid; border-radius: 9px; padding: 5px;}");
     ui->label_sub_state->setStyleSheet("QLabel { background-color : white; color : black; qproperty-alignment: AlignCenter; font: nomal; border-color: rgb(255,255,255); padding: 5px;}");
     ui->label_qos_num->setStyleSheet("QLabel { background-color : white; color : black; qproperty-alignment: AlignCenter; font: nomal; border-color: rgb(255,255,255); padding: 5px;}");
     ui->label_qos->setStyleSheet("QLabel { background-color : white; color : black; qproperty-alignment: AlignCenter; font: nomal; border-color: rgb(255,255,255); padding: 5px;}");
@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->label_qos_num->setText("0");
     ui->label_sub_state->setText("Unsubscribed");
     ui->labelTcp->setStyleSheet("QLabel { background-color : red; color : black; qproperty-alignment: AlignCenter; font: bold; border-color: rgb(255,255,255); border-width: 2px; border-style: solid; border-radius: 9px; padding: 5px;}");
-    ui->labelTcp->setText("TCP/IP : Closed!");
+    ui->labelTcp->setText("UAV connection : Disconnected!");
 
     config = new settingsfile();
 
@@ -38,8 +38,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // video vlc
     _instance = new VlcInstance(VlcCommon::args(), this);
+    _instance_below = new VlcInstance(VlcCommon::args(), this);
     _player_forward = new VlcMediaPlayer(_instance);
-    _player_below = new VlcMediaPlayer(_instance);
+    _player_below = new VlcMediaPlayer(_instance_below);
     _player_forward->setVideoWidget(ui->video_forward);
     _player_below->setVideoWidget(ui->video_below);
     ui->video_forward->setMediaPlayer(_player_forward);
@@ -67,15 +68,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mqttClient->m_client, &QMqttClient::connected, mqttClient, &mqttclient::connectToGateway);
     connect(mqttClient, &mqttclient::signalSubcribe, this, &MainWindow::onSubcribeTopic);
 
-//    QNetworkRequest request(QUrl("https://reqres.in/api/users?page=2"));
-//    qDebug()<<request.hasRawHeader();
-//    request.setHeader(QNetworkRequest::ContentTypeHeader,"application/json");
-//    QNetworkReply *reply = test->get(request);
-//    qDebug()<< reply->readAll();
-//    QNetworkRequest request(QUrl("https://demo.thingsboard.io/api/v1/PqEMhRTVsAj8fav4ZfoH/attributes?clientKeys=attribute1,attribute2"));
-//    request.setRawHeader("Content-Type", "application/fhir+json");
-//    connect(&test, &QNetworkAccessManager::finished, this, &MainWindow::testfunct);
-//    test.get(request);
     restClient = new restclient();
     thread_restclient = new QThread();
     restClient->moveToThread(thread_restclient);
@@ -88,6 +80,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(restClient, &restclient::new_command_received,udpClient,&udpclient::send_msg_command);
     connect(restClient, &restclient::new_control_robot_received,udpClient,&udpclient::send_msg_control_robot);
     connect(restClient, &restclient::new_waypoint_received, udpClient, &udpclient::send_msg_waypoint);
+    connect(restClient, &restclient::print_data, console, &Console::printData);
+    connect(udpClient, &udpclient::uav_connected, this, &MainWindow::onUavConnected);
 }
 void MainWindow::testfunct(QNetworkReply *reply)
 {
@@ -162,6 +156,7 @@ void MainWindow::onMqttDisconnect()
                                       "border-radius: 9px; "
                                       "padding: 5px;}");
     ui->labelConnected->setText("MQTT Status: Disconnected!!!");
+    mqttClient->connectToHost();
 }
 
 void MainWindow::onSubcribeTopic(bool result)
@@ -246,10 +241,10 @@ void MainWindow::on_subButton_clicked()
 
 void MainWindow::on_get_video_forward_clicked()
 {
-    _media_forward = new VlcMedia("http://192.168.0.101:9000/?action=stream", _instance);
+    _media_forward = new VlcMedia("http://192.168.1.100:9000/?action=stream", _instance);
     //reduce latency
     QStringList option_list;
-           option_list.append(":network-caching=10");
+           option_list.append(":network-caching=100");
            option_list.append(":clock-jitter=0");
            option_list.append(":clock-synchro=0");
 
@@ -262,7 +257,7 @@ void MainWindow::on_get_video_forward_clicked()
 
 void MainWindow::on_get_video_below_clicked()
 {
-    _media_below = new VlcMedia("http://192.168.0.101:8080/stream?topic=/main_camera/image_raw", _instance);
+    _media_below = new VlcMedia("http://192.168.1.100:8080/stream?topic=/main_camera/image_raw", _instance_below);
     //reduce latency
     QStringList option_list;
            option_list.append(":network-caching=100");
@@ -273,5 +268,10 @@ void MainWindow::on_get_video_below_clicked()
     _player_below->open(_media_below);
 
 
+}
+void MainWindow::onUavConnected()
+{
+    ui->labelTcp->setStyleSheet("QLabel { background-color : green; color : black; qproperty-alignment: AlignCenter; font: bold; border-color: rgb(255,255,255); border-width: 2px; border-style: solid; border-radius: 9px; padding: 5px;}");
+    ui->labelTcp->setText("UAV connection : Connected!");
 }
 

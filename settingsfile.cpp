@@ -91,6 +91,9 @@ void settingsfile::readFile(QString dataType, QString data)
         case ACCESS_TOKEN:
             this->ACCESS_TOKEN_H = data;
             break;
+        case KEY_SWAGGER:
+            this->key_swagger = data;
+            break;
         default:
             // Do nothing
             break;
@@ -121,6 +124,7 @@ void settingsfile::Initialize()
     s_mapStringValues["TOPIC_GATEWAY_ATTRUBUTES_RESPONSE"] = TOPIC_GATEWAY_ATTRUBUTES_RESPONSE;
     s_mapStringValues["TOPIC_GATEWAY_TELEMETRY"] = TOPIC_GATEWAY_TELEMETRY;
     s_mapStringValues["ACCESS_TOKEN"] = ACCESS_TOKEN;
+    s_mapStringValues["KEY_SWAGGER"] = KEY_SWAGGER;
 }
 
 void settingsfile::updateConfigSettings()

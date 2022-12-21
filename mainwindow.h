@@ -52,6 +52,7 @@ private slots:
     void onMqttConntected();
     void onMqttConnecting();
     void onMqttDisconnect();
+    void onUavConnected();
     void onSubcribeTopic(bool result);
     void onMqttSubUpdateState(QString state);
     void onMqttSubMessage(QString message);
@@ -87,7 +88,7 @@ private:
     mqttclient* mqttClient;
     QString attributes;
     //vlc video
-    VlcInstance *_instance;
+    VlcInstance *_instance,*_instance_below;
     VlcMedia *_media_forward, *_media_below;
     VlcMediaPlayer *_player_forward, *_player_below;
 };
