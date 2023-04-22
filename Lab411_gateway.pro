@@ -57,7 +57,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 include(3rdParty/qextserialport/src/qextserialport.pri)
-LIBS       += -lVLCQtCore -lVLCQtWidgets
+LIBS       += -L/usr/local/lib -lVLCQtCore -lVLCQtWidgets
 RESOURCES += \
     applicationResource.qrc
 

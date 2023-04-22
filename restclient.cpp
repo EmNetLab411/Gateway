@@ -11,10 +11,10 @@ restclient::restclient(QObject *parent) : QObject(parent)
     key_swagger_request.setRawHeader("Content-Type", "application/json");
 
     lastest_command_id = -1;
-    manual_control_request_url = "https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/f27036d0-7441-11ed-8b62-e9eba22b9df6/values/attributes/CLIENT_SCOPE";
-    command_request_url = "https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/2a4fcd90-7442-11ed-b24c-ab40826c689b/values/attributes/CLIENT_SCOPE";
-    control_robot_request_url ="https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/09540c00-7442-11ed-861d-25ac767dd88b/values/attributes/CLIENT_SCOPE";
-    msg_waypoint_request_url ="https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/524635f0-7442-11ed-a3e8-cd953d903e76/values/attributes/CLIENT_SCOPE";
+    manual_control_request_url = "https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/adc20bd0-ddc3-11ed-a55d-8deb5036ab7e/values/attributes/CLIENT_SCOPE";
+    command_request_url = "https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/bdcc56c0-ddc3-11ed-8b8c-abbe35f4bc9c/values/attributes/CLIENT_SCOPE";
+    control_robot_request_url ="https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/b585cf00-ddc3-11ed-8d7a-654bc03db6d4/values/attributes/CLIENT_SCOPE";
+    msg_waypoint_request_url ="https://thingsboard.cloud:443/api/plugins/telemetry/DEVICE/a65ac080-ddc3-11ed-8d7a-654bc03db6d4/values/attributes/CLIENT_SCOPE";
 
     time_now = new QTime();
 
@@ -59,7 +59,7 @@ restclient::restclient(QObject *parent) : QObject(parent)
      connect(timer_waypoint, &QTimer::timeout,this, &restclient::read_waypoint);
      timer_waypoint->start(1000);
 
-     QByteArray message_request_key = QString("{\"username\":\"lab411.training@gmail.com\" , \"password\":\"ktttlab411\"}").toUtf8();
+     QByteArray message_request_key = QString("{\"username\":\"training3.lab411@gmail.com\" , \"password\":\"ktttlab411\"}").toUtf8();
      get_key_swagger->post(key_swagger_request,message_request_key);
 
 
@@ -70,7 +70,7 @@ restclient::restclient(QObject *parent) : QObject(parent)
 //read message, command using GET method
 void restclient::read_key()
 {
-    QByteArray message_request_key = QString("{\"username\":\"lab411.training@gmail.com\" , \"password\":\"ktttlab411\"}").toUtf8();
+    QByteArray message_request_key = QString("{\"username\":\"training3.lab411@gmail.com\" , \"password\":\"ktttlab411\"}").toUtf8();
     get_key_swagger->post(key_swagger_request,message_request_key);
 }
 void restclient::read_waypoint()
@@ -124,12 +124,12 @@ void restclient::handle_manual_control(QNetworkReply *reply)
             else if (manual_control_json[i].toObject().value("key") == "Yawrate") Yawrate = manual_control_json[i].toObject().value("value").toInt();
         }
         emit new_manual_control_received(Vx,Vy,Vz,Yawrate,true);
-        qDebug()<<"rest client: manual control";
+        //qDebug()<<"rest client: manual control";
     }
     else
     {
         emit new_manual_control_received(Vx,Vy,Vz,Yawrate,false);
-        qDebug()<<"rest client: stop manual control";
+        //qDebug()<<"rest client: stop manual control";
     }
 
 
@@ -139,7 +139,7 @@ void restclient::handle_manual_control(QNetworkReply *reply)
 
 void restclient::handle_command(QNetworkReply *reply)
 {
-//    qDebug()<<reply->readAll();
+    //qDebug()<<reply->readAll();
     QDateTime dt = QDateTime :: currentDateTime();
     QJsonDocument _command_json = QJsonDocument::fromJson(reply->readAll());
     QJsonArray command_json = _command_json.array();
@@ -159,12 +159,13 @@ void restclient::handle_command(QNetworkReply *reply)
         }
         emit new_command_received(mode_id,param1,param2,param3,param4);
         emit print_data("new command received: ");
+
     }
 
 }
 void restclient::handle_waypoint(QNetworkReply *reply)
 {
-//    qDebug()<<reply->readAll();
+    //qDebug()<<reply->readAll();
     QDateTime dt = QDateTime :: currentDateTime();
     QJsonDocument _waypoint_json = QJsonDocument::fromJson(reply->readAll());
     QJsonArray waypoint_json = _waypoint_json.array();

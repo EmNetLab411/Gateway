@@ -23,7 +23,7 @@ TIME_DETECT_FILE_PATH:./WSAN/timeDetect.txt
 
 =========================:MQTT Config:=========================
 
-HOST_MQTT:thingsboard.clouds
+HOST_MQTT:thingsboard.cloud
 PORT_MQTT:1883
 TOPIC_DEVICE_TELEMETRY:v1/devices/me/telemetry
 TOPIC_GATEWAY_CONNECT:v1/gateway/connect
