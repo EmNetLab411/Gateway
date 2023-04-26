@@ -1,5 +1,13 @@
 QT       += core gui mqtt
+QT += quick
+QT += location
+QT += quickwidgets
 
+
+QT += qml network quick positioning location
+#CONFIG += qmltypes
+#QML_IMPORT_NAME = position.marker
+#QML_IMPORT_MAJOR_VERSION = 1
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -26,7 +34,7 @@ SOURCES += \
     restclient.cpp \
     settingsfile.cpp\
     udpclient.cpp
-
+#    position.marker
 HEADERS += \
     communication/protocols/messages/messageID.h \
     communication/protocols/messages/uavlink_msg_command_t.h \
@@ -59,7 +67,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 include(3rdParty/qextserialport/src/qextserialport.pri)
 LIBS       += -lVLCQtCore -lVLCQtWidgets
 RESOURCES += \
-    applicationResource.qrc
+    Digital_maps.qrc
 
 DISTFILES += \
     rest_api_tb.py

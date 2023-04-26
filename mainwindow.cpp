@@ -60,6 +60,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->video_below->setCropRatio(r);
     ui->video_below->enableDefaultSettings();
 
+
+
     createMqttClient();
 
     connect(this, &MainWindow::signalMqttPublic, mqttClient, &mqttclient::Publish);
@@ -83,6 +85,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(restClient, &restclient::print_data, console, &Console::printData);
     connect(udpClient, &udpclient::uav_connected, this, &MainWindow::onUavConnected);
 }
+
+//void MainWindow::create_marker_msg_position(QByteArray marker_msg_position){
+//    uavlink_msg_global_position_t global_position;
+//    global_position.Decode(marker_msg_position);
+//}
+
 void MainWindow::testfunct(QNetworkReply *reply)
 {
     qDebug()<< reply->readAll();

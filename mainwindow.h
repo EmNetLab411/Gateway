@@ -20,6 +20,8 @@
 #include <VLCQtCore/MediaPlayer.h>
 #include <QNetworkAccessManager>
 
+#include <QtQuick>
+
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QJsonObject>
@@ -75,6 +77,7 @@ private slots:
     void send_msg_control_robot(qint32 Step1, qint32 Step2, qint32 Step3, qint32 Step4, qint32 Step5);
     void send_msg_waypoint(qint32 waypointId, qint32 lat, qint32 lon, qint32 alt);
 
+    //void create_marker_msg_position(QByteArray marker_msg_position);
 public:
     settingsfile* config;
 private:

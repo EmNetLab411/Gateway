@@ -58,3 +58,29 @@ qint16 uavlink_msg_global_position_t::getYaw()
 {
     return _yaw;
 }
+
+qint32 uavlink_msg_global_position_t::lat() const
+{
+    return _lat;
+}
+
+void uavlink_msg_global_position_t::setLat(qint32 newLat)
+{
+    if (_lat == newLat)
+        return;
+    _lat = newLat;
+    emit latChanged();
+}
+
+qint32 uavlink_msg_global_position_t::lon() const
+{
+    return _lon;
+}
+
+void uavlink_msg_global_position_t::setLon(qint32 newLon)
+{
+    if (_lon == newLon)
+        return;
+    _lon = newLon;
+    emit lonChanged();
+}

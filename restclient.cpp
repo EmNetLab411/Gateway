@@ -132,9 +132,6 @@ void restclient::handle_manual_control(QNetworkReply *reply)
         qDebug()<<"rest client: stop manual control";
     }
 
-
-
-
 }
 
 void restclient::handle_command(QNetworkReply *reply)
