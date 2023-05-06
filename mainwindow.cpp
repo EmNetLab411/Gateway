@@ -61,7 +61,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->video_below->enableDefaultSettings();
 
 
-
     createMqttClient();
 
     connect(this, &MainWindow::signalMqttPublic, mqttClient, &mqttclient::Publish);
@@ -77,6 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
     udpClient = new udpclient();
     connect(udpClient, &udpclient::new_msg_state_received,mqttClient,&mqttclient::publishDataState);
     connect(udpClient, &udpclient::new_msg_global_position_received,mqttClient,&mqttclient::publishDataGlobalPosition);
+    connect(udpClient, &udpclient::new_msg_global_position_received,this, &MainWindow::gps_change_slot);
     connect(udpClient, &udpclient::new_msg_sensor_received,mqttClient,&mqttclient::publishDataSensor);
     connect(restClient, &restclient::new_manual_control_received,udpClient,&udpclient::hold_manual_control_data);
     connect(restClient, &restclient::new_command_received,udpClient,&udpclient::send_msg_command);
@@ -85,11 +85,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(restClient, &restclient::print_data, console, &Console::printData);
     connect(udpClient, &udpclient::uav_connected, this, &MainWindow::onUavConnected);
 }
-
-//void MainWindow::create_marker_msg_position(QByteArray marker_msg_position){
-//    uavlink_msg_global_position_t global_position;
-//    global_position.Decode(marker_msg_position);
-//}
 
 void MainWindow::testfunct(QNetworkReply *reply)
 {
@@ -103,7 +98,12 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
+void MainWindow::gps_change_slot(QByteArray msg)
+{
+    uavlink_msg_global_position_t global_position;
+    global_position.Decode(msg);
+    emit gps_change(global_position.getLatitude(), global_position.getLongitude(), global_position.getYaw());
+}
 void MainWindow::createMqttClient()
 {
     mqttClient = new mqttclient(this, config->hostMqtt, config->portMqtt);

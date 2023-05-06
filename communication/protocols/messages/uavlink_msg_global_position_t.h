@@ -9,8 +9,12 @@
 class uavlink_msg_global_position_t : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(qint32 lat READ lat WRITE setLat NOTIFY latChanged)
-    Q_PROPERTY(qint32 lon READ lon WRITE setLon NOTIFY lonChanged)
+    Q_PROPERTY(qint32 newLat READ getLatitude WRITE setLat NOTIFY latChanged)
+    Q_PROPERTY(qint32 newLon READ getLongitude WRITE setLon NOTIFY lonChanged)
+    Q_PROPERTY(qint16 newYaw READ getYaw WRITE setYaw NOTIFY yawChanged)
+    Q_PROPERTY(qint16 newVx READ getVx WRITE setVx NOTIFY vxChanged)
+    Q_PROPERTY(qint16 newVy READ getVy WRITE setVy NOTIFY vyChanged)
+    Q_PROPERTY(qint16 newVz READ getVz WRITE setVz NOTIFY vzChanged)
 public:
     explicit uavlink_msg_global_position_t(QObject *parent = nullptr);
     ~uavlink_msg_global_position_t();
@@ -24,13 +28,28 @@ public:
     qint16 getVz();
     qint16 getYaw();
 
-    qint32 lat() const;
     void setLat(qint32 newLat);
 
-    qint32 lon() const;
     void setLon(qint32 newLon);
 
+    void setYaw(qint16 newYaw);
+
+    void setVx(qint16 newVx);
+
+    void setVy(qint16 newVy);
+
+    void setVz(qint16 newVz);
+
 signals:
+
+    void yawChanged();
+
+    void vxChanged();
+
+    void vyChanged();
+
+    void vzChanged();
+
     void latChanged();
 
     void lonChanged();

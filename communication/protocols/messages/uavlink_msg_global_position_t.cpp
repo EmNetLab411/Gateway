@@ -1,4 +1,5 @@
 #include "uavlink_msg_global_position_t.h"
+#include <QDebug>
 
 uavlink_msg_global_position_t::uavlink_msg_global_position_t(QObject *parent) : QObject(parent)
 {
@@ -59,28 +60,57 @@ qint16 uavlink_msg_global_position_t::getYaw()
     return _yaw;
 }
 
-qint32 uavlink_msg_global_position_t::lat() const
+
+
+void uavlink_msg_global_position_t::setYaw(qint16 newYaw)
 {
-    return _lat;
+    if (_yaw == newYaw)
+        return;
+    _yaw = newYaw;
+    emit yawChanged();
+}
+
+void uavlink_msg_global_position_t::setVx(qint16 newVx)
+{
+    if (_vx == newVx)
+        return;
+    _vx = newVx;
+    emit vxChanged();
+}
+
+void uavlink_msg_global_position_t::setVy(qint16 newVy)
+{
+    if (_vy == newVy)
+        return;
+    _vy = newVy;
+    emit vyChanged();
+}
+
+void uavlink_msg_global_position_t::setVz(qint16 newVz)
+{
+    if (_vz == newVz)
+        return;
+    _vz = newVz;
+    emit vzChanged();
 }
 
 void uavlink_msg_global_position_t::setLat(qint32 newLat)
 {
     if (_lat == newLat)
         return;
-    _lat = newLat;
+    newLat = _lat;
     emit latChanged();
-}
-
-qint32 uavlink_msg_global_position_t::lon() const
-{
-    return _lon;
+    qDebug() << newLat;
 }
 
 void uavlink_msg_global_position_t::setLon(qint32 newLon)
 {
     if (_lon == newLon)
         return;
-    _lon = newLon;
+    newLon = _lon;
     emit lonChanged();
+    qDebug() << newLon;
 }
+
+
+

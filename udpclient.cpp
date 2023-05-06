@@ -3,7 +3,7 @@
 udpclient::udpclient(QObject *parent) : QObject(parent)
 {
     socket = new QUdpSocket(this);
-    client_addr="192.168.0.123";
+    client_addr="127.0.0.1";
     socket->connectToHost(QHostAddress(client_addr) , 12345);
     QByteArray msg = "hello";
     int ret = socket->writeDatagram(msg, QHostAddress(client_addr),12345);

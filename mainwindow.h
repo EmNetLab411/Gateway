@@ -14,6 +14,7 @@
 #include "console.h"
 #include "mqttclient.h"
 #include "restclient.h"
+
 #include <VLCQtCore/Common.h>
 #include <VLCQtCore/Instance.h>
 #include <VLCQtCore/Media.h>
@@ -48,6 +49,9 @@ private:
 signals:
     void signalMqttSubcribe();
     void signalMqttPublic(QString message);
+    void gps_change(double lat, double lon, int yaw);
+public slots:
+    void gps_change_slot(QByteArray msg);
 
 private slots:
     void on_pushButton_clicked();
@@ -77,7 +81,7 @@ private slots:
     void send_msg_control_robot(qint32 Step1, qint32 Step2, qint32 Step3, qint32 Step4, qint32 Step5);
     void send_msg_waypoint(qint32 waypointId, qint32 lat, qint32 lon, qint32 alt);
 
-    //void create_marker_msg_position(QByteArray marker_msg_position);
+
 public:
     settingsfile* config;
 private:

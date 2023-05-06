@@ -2,6 +2,5 @@
     <qresource prefix="/">
         <file>add_map.qml</file>
         <file>marker.png</file>
-        <file>marker.qml</file>
     </qresource>
 </RCC>

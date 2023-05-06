@@ -2,7 +2,6 @@ import QtQuick 2.15
 import QtLocation 5.6
 import QtPositioning 5.5
 import QtQuick.Window 2.14
-import position.marker 1.0
 
 Window {
     width: Qt.platform.os == "android" ? Screen.width : 512
@@ -10,54 +9,47 @@ Window {
     visible: true
     Plugin {
         id: mapPlugin
-        name: "osm" // "mapboxgl", "esri", ...
-        //property variant uavlink_msg_global_position_t
-
-    }
-    function addMarker(latitude, longitude)
-        {
-            var Component = Qt.createComponent("qrc:/marker.qml")
-            var item = Component.createObject(window, {
-                                                  coordinate: QtPositioning.coordinate(latitude, longitude)
-                                              })
-            map.addMapItem(item)
+        name: "osm"
+        PluginParameter {
+                   name: "osm.mapping.providersrepository.disabled"
+                   value: "true"
+               }
+        PluginParameter {
+                    name: "osm.mapping.providersrepository.address"
+                    value: "http://maps-redirect.qt.io/osm/5.8/"
+                }}
+    MapQuickItem {
+        id: marker
+        anchorPoint.x: image.width/4
+        anchorPoint.y: image.height
+        coordinate: QtPositioning.coordinate(40.75253061253879, -74.17195258804027)
+        sourceItem: Image {
+            id: image
+            source: "marker.png"
+            width: 15
+            height: 15
+            transform: Rotation{
+                id: rotaion_yaw
+                angle: 30}
         }
+    }
+
     Map {
-        Uavlink_msg_global_position_t{
-            id: position_marker}
+        id: position_marker
         anchors.fill: parent
         plugin: mapPlugin
-        center: QtPositioning.coordinate(/*position_marker.lat, position_marker.lon*/20.960965, 105.950315)
-        zoomLevel: 14
-        Component.onCompleted:addMarker(position_marker.lat, position_marker.lon)
-//        MapItemView {
-//            model: markerModel
-//            delegate: MapQuickItem {
-//                anchorPoint.x: image.width/2
-//                anchorPoint.y: image.height
-//                coordinate: QtPositioning.coordinate(20.960965, 105.950315/*position_marker.lat, position_marker.lon*/)
-//                sourceItem: Column {
-//                    Image {
-//                        id: image
-//                        source: "qrc:/marker.png"
-//                    }
-//                    Text {
-//                        text: "MSG_Position"
-//                        color: "white"
-//                        font.pixelSize: 12
-//                    }
-//                }
-//            }
-//        }
-//        ListModel {
-//            id: markerModel
-//            ListElement {
-//                latitude: 21.007406553751757
-//                longitude: 105.84280452935386
-//                label: "HN"
-//            }
-//        }
+        center: QtPositioning.coordinate(40.75253061253879, -74.17195258804027)
+        zoomLevel: 30
+        Component.onCompleted: position_marker.addMapItem(marker)
+
+    }
+    Connections{
+        target: Mainwindow
+        onGps_change: {
+            position_marker.center = QtPositioning.coordinate(lat/10000000,lon/10000000)
+            marker.coordinate = QtPositioning.coordinate(lat/10000000,lon/10000000)
+            rotaion_yaw.angle = yaw
+        }
     }
 }
-
 
